@@ -23,7 +23,7 @@ export function Login() {
         <Field id="login-password" label="Password" type="password" autoComplete="current-password" required />
         <button className="primary-button" type="submit">Log in</button>
         {message && <p className="form-message" role="status">{message}</p>}
-        <button className="text-button" type="button" onClick={() => setMessage("Password reset is not available yet.")}>Forgot password?</button>
+        <Link className="text-button" to="/reset-password">Forgot password?</Link>
       </form>
       <div className="divider"><span>New to SafeRide?</span></div>
       <Link className="secondary-button" to="/signup">Create account</Link>

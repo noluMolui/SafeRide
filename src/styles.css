@@ -65,4 +65,15 @@
   .tag { @apply inline-flex items-center gap-1 rounded-full bg-soft pl-3 text-sm; }
   .suburb-entry { @apply flex gap-2; }
   .small-button { @apply min-h-12 shrink-0 rounded-xl bg-blue-100 px-4 font-semibold text-brand hover:bg-blue-200; }
+  .reset-success { @apply flex flex-col items-center text-center; }
+  .reset-success p { @apply mt-2 max-w-sm leading-6 text-muted; }
+  .reset-success .primary-button { @apply mt-6; }
+  .reset-icon { @apply grid h-14 w-14 place-items-center rounded-full bg-blue-100 text-brand; }
+  .reset-success h2 { @apply mt-4 text-xl; }
+  .join-card { @apply flex flex-col items-center text-center; }
+  .join-icon { @apply grid h-14 w-14 place-items-center rounded-full bg-blue-100 text-brand; }
+  .join-card h2 { @apply mt-4; }
+  .join-code { @apply mt-3 rounded-xl bg-soft px-5 py-3 font-mono text-xl font-bold tracking-widest text-ink; }
+  .join-copy { @apply my-5 max-w-sm leading-6 text-muted; }
+  .join-card .primary-button, .join-card .secondary-button { @apply mt-3 flex gap-2; }
 }

@@ -33,4 +33,17 @@ describe("authentication preview", () => {
     await user.click(screen.getByRole("link", { name: "Back to account details" }));
     expect(screen.getByLabelText("Full name")).toHaveValue("Sipho Dlamini");
   });
+  it("S04 validates and confirms a password reset request", async () => {
+    const user = userEvent.setup();
+    render(<MemoryRouter initialEntries={["/reset-password"]}><App /></MemoryRouter>);
+    await user.type(screen.getByLabelText("Email address"), "parent@example.co.za");
+    await user.click(screen.getByRole("button", { name: "Send reset link" }));
+    expect(screen.getByText("Check your inbox")).toBeInTheDocument();
+  });
+  it("S05a displays the invite code and account choices", () => {
+    render(<MemoryRouter initialEntries={["/join/ABC12345"]}><App /></MemoryRouter>);
+    expect(screen.getByText("ABC12345")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Log in/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Create account/ })).toBeInTheDocument();
+  });
 });
