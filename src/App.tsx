@@ -6,6 +6,11 @@ import { DriverCompliance } from "./features/auth/DriverCompliance";
 import { signupSchema } from "./features/auth/validation";
 import { ResetPassword } from "./features/auth/ResetPassword";
 import { JoinLink } from "./features/auth/JoinLink";
+import { DriverDashboard } from "./features/driver/DriverDashboard";
+import { RouteList } from "./features/driver/RouteList";
+import { RouteForm } from "./features/driver/RouteForm";
+import { RouteRoster } from "./features/driver/RouteRoster";
+import { ActiveTrip } from "./features/driver/ActiveTrip";
 
 export function App() {
   const [signup, setSignup] = useState<SignupValues>(emptySignup);
@@ -16,6 +21,12 @@ export function App() {
       <Route path="/signup" element={<Signup values={signup} onChange={setSignup} />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/join/:code" element={<JoinLink />} />
+      <Route path="/driver/dashboard" element={<DriverDashboard />} />
+      <Route path="/driver/routes" element={<RouteList />} />
+      <Route path="/driver/routes/new" element={<RouteForm />} />
+      <Route path="/driver/routes/:id/edit" element={<RouteForm />} />
+      <Route path="/driver/routes/:id" element={<RouteRoster />} />
+      <Route path="/driver/trip/:tripId" element={<ActiveTrip />} />
       <Route
         path="/signup/driver"
         element={

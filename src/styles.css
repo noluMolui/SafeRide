@@ -76,4 +76,120 @@
   .join-code { @apply mt-3 rounded-xl bg-soft px-5 py-3 font-mono text-xl font-bold tracking-widest text-ink; }
   .join-copy { @apply my-5 max-w-sm leading-6 text-muted; }
   .join-card .primary-button, .join-card .secondary-button { @apply mt-3 flex gap-2; }
+
+  .driver-app { @apply min-h-screen bg-canvas pb-20 lg:flex lg:pb-0; }
+  .driver-sidebar { @apply hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white p-5 lg:flex; }
+  .driver-brand { @apply flex items-center gap-3 text-xl font-bold text-ink; }
+  .driver-brand > span { @apply grid h-10 w-10 place-items-center rounded-xl bg-brand text-white; }
+  .driver-brand.compact { @apply text-lg; }
+  .driver-brand.compact > span { @apply h-9 w-9; }
+  .driver-sidebar nav { @apply mt-10 flex flex-col gap-2; }
+  .driver-sidebar nav a { @apply flex min-h-12 items-center gap-3 rounded-lg px-3 font-semibold text-muted hover:bg-soft hover:text-ink; }
+  .driver-sidebar nav a.active { @apply bg-blue-50 text-brand; }
+  .sidebar-logout { @apply mt-auto flex min-h-12 items-center gap-3 rounded-lg px-3 font-semibold text-muted hover:bg-soft; }
+  .driver-main { @apply min-w-0 flex-1; }
+  .driver-mobile-header { @apply sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-5 lg:hidden; }
+  .driver-mobile-header button { @apply grid h-11 w-11 place-items-center rounded-lg bg-soft; }
+  .driver-content { @apply mx-auto w-full max-w-[1120px] px-5 pb-8 pt-6 lg:px-8 lg:pt-8; }
+  .driver-content > h1 { @apply mb-5 text-3xl; }
+  .driver-date { @apply mb-5 flex items-center justify-between text-sm text-muted; }
+  .online-chip { @apply inline-flex items-center gap-2 rounded-full bg-green-50 px-3 py-2 text-sm font-semibold text-green-700; }
+  .online-chip i { @apply h-2 w-2 rounded-full bg-green-500; }
+  .compliance-strip { @apply mb-6 grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_48px]; }
+  .compliance-strip > div { @apply flex items-center gap-3 bg-white p-4; }
+  .compliance-strip > a { @apply grid h-12 place-items-center bg-white text-brand sm:col-span-2 lg:col-span-1; }
+  .compliance-strip p { @apply flex flex-col; }
+  .compliance-strip p span { @apply mt-1 text-sm text-muted; }
+  .compliance-icon { @apply grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-green-50 text-green-700; }
+  .compliance-icon.warning { @apply bg-amber-50 text-amber-700; }
+  .driver-section-heading { @apply mb-3 flex items-end justify-between gap-3; }
+  .driver-section-heading p { @apply text-lg font-bold; }
+  .driver-section-heading span { @apply mt-1 block text-sm text-muted; }
+  .icon-text-button { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 font-semibold text-brand; }
+  .icon-text-button.filled { @apply border-brand bg-brand text-white; }
+  .route-card-grid { @apply grid gap-4 md:grid-cols-2; }
+  .route-card { @apply rounded-xl border border-slate-200 bg-white p-5; }
+  .route-card.featured { @apply border-blue-200; }
+  .route-card-top { @apply flex items-center justify-between text-sm text-muted; }
+  .direction-chip, .pending-chip { @apply inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-brand; }
+  .direction-chip.afternoon { @apply bg-amber-50 text-amber-700; }
+  .direction-chip.morning { @apply bg-green-50 text-green-700; }
+  .route-card h2 { @apply mt-4 text-xl; }
+  .route-card > p { @apply mt-2 flex items-center gap-2 text-sm text-muted; }
+  .route-card-meta { @apply my-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm text-muted; }
+  .route-card-meta span { @apply flex items-center gap-2; }
+  .dashboard-requests { @apply mt-5 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 p-4; }
+  .dashboard-requests > div { @apply flex items-center gap-3; }
+  .dashboard-requests p { @apply flex flex-col; }
+  .dashboard-requests p span { @apply mt-1 text-sm text-muted; }
+  .dashboard-requests > a { @apply inline-flex min-h-11 items-center gap-2 font-semibold text-brand; }
+  .request-icon { @apply grid h-10 w-10 place-items-center rounded-lg bg-white text-amber-700; }
+  .driver-bottom-nav { @apply fixed bottom-0 left-0 right-0 z-30 grid h-16 grid-cols-4 border-t border-slate-200 bg-white lg:hidden; }
+  .driver-bottom-nav a { @apply flex flex-col items-center justify-center gap-1 text-xs font-semibold text-muted; }
+  .driver-bottom-nav a.active { @apply text-brand; }
+  .driver-toolbar { @apply mb-5 flex items-center justify-between gap-3; }
+  .driver-toolbar p { @apply text-muted; }
+  .route-list { @apply grid gap-3; }
+  .route-list-card { @apply flex min-h-24 items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 hover:border-blue-200; }
+  .route-list-icon { @apply grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-blue-50 text-brand; }
+  .route-list-copy { @apply min-w-0 flex-1; }
+  .route-list-copy > div { @apply flex gap-2; }
+  .route-list-copy h2 { @apply mt-2 truncate; }
+  .route-list-copy p { @apply mt-1 text-sm text-muted; }
+  .pending-chip { @apply bg-amber-100 text-amber-800; }
+  .inactive-section { @apply mt-7 border-t border-slate-200 pt-5; }
+  .inactive-section p { @apply mt-2 text-sm text-muted; }
+  .back-link { @apply mb-4 inline-flex min-h-11 items-center gap-2 font-semibold text-brand; }
+  .route-form { @apply max-w-3xl; }
+  .field-block { @apply block; }
+  .segmented { @apply grid grid-cols-2 gap-2 rounded-xl bg-soft p-1; }
+  .segmented button { @apply min-h-12 rounded-lg font-semibold text-muted; }
+  .segmented button.active { @apply bg-white text-brand shadow-sm; }
+  .day-grid { @apply grid grid-cols-3 gap-2 sm:grid-cols-6; }
+  .day-grid button { @apply min-h-12 rounded-lg border border-slate-200 bg-white font-semibold text-muted; }
+  .day-grid button.active { @apply border-brand bg-blue-50 text-brand; }
+  .roster-summary { @apply mb-4 flex items-end justify-between gap-3 rounded-xl border border-slate-200 bg-white p-5; }
+  .roster-summary h2 { @apply mt-3 text-xl; }
+  .roster-summary p { @apply mt-1 text-sm text-muted; }
+  .small-secondary { @apply w-auto shrink-0 px-4; }
+  .invite-card { @apply mb-5 flex flex-col justify-between gap-4 rounded-xl bg-brand p-5 text-white sm:flex-row sm:items-center; }
+  .invite-card > div:first-child { @apply flex flex-col; }
+  .invite-label { @apply text-sm text-blue-100; }
+  .invite-card strong { @apply mt-1 font-mono text-2xl tracking-widest; }
+  .invite-actions { @apply flex gap-2; }
+  .invite-actions button { @apply inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-3 text-sm font-semibold text-brand; }
+  .roster-section { @apply mb-5 rounded-xl border border-slate-200 bg-white p-4; }
+  .roster-heading { @apply mb-3 flex items-center justify-between; }
+  .count-chip { @apply inline-flex items-center gap-1 rounded-full bg-soft px-3 py-1 text-sm font-semibold text-muted; }
+  .pending-row, .learner-row { @apply flex min-h-16 items-center gap-3 border-t border-slate-100 py-3 first:border-t-0; }
+  .learner-avatar { @apply grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blue-100 font-bold text-brand; }
+  .pending-row > div:nth-child(2), .learner-info { @apply min-w-0 flex-1; }
+  .pending-row p, .learner-row p { @apply mt-1 text-sm text-muted; }
+  .pending-actions { @apply flex gap-2; }
+  .pending-actions button { @apply min-h-11 rounded-lg border border-slate-200 px-3 text-sm font-semibold; }
+  .pending-actions button:first-child { @apply inline-flex items-center gap-1 border-green-200 bg-green-50 text-green-700; }
+  .medical-icon { @apply grid h-10 w-10 place-items-center rounded-lg bg-amber-50 text-amber-700; }
+  .learner-row > a { @apply grid h-11 w-11 place-items-center rounded-lg bg-soft text-brand; }
+  .stop-number { @apply grid h-8 w-8 shrink-0 place-items-center rounded-full bg-soft text-sm font-bold text-muted; }
+  .empty-row { @apply border-t border-slate-100 py-5 text-sm text-muted; }
+  .trip-header { @apply flex items-start justify-between rounded-xl border border-slate-200 bg-white p-5; }
+  .trip-header h2 { @apply mt-3 text-xl; }
+  .trip-header p { @apply mt-1 text-sm text-muted; }
+  .trip-header button { @apply grid h-11 w-11 place-items-center rounded-lg bg-soft; }
+  .trip-progress { @apply my-4 flex items-center gap-4 rounded-xl bg-blue-50 p-4; }
+  .trip-progress > div:first-child { @apply flex min-w-24 flex-col; }
+  .trip-progress > div:first-child span { @apply text-xs text-muted; }
+  .progress-track { @apply h-2 flex-1 overflow-hidden rounded-full bg-white; }
+  .progress-track span { @apply block h-full rounded-full bg-brand; }
+  .delay-button { @apply mb-4 inline-flex min-h-11 items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 font-semibold text-amber-800; }
+  .checkin-list { @apply grid gap-3; }
+  .checkin-row { @apply grid grid-cols-[44px_1fr] gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[44px_180px_1fr]; }
+  .checkin-copy { @apply min-w-0; }
+  .checkin-copy p { @apply mt-1 text-sm text-muted; }
+  .checkin-actions { @apply col-span-2 grid grid-cols-3 gap-2 md:col-span-1; }
+  .checkin-actions button { @apply flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg border border-slate-200 text-xs font-semibold text-muted; }
+  .checkin-actions button.selected.picked { @apply border-blue-300 bg-blue-50 text-blue-700; }
+  .checkin-actions button.selected.dropped { @apply border-green-300 bg-green-50 text-green-700; }
+  .checkin-actions button.selected.absent { @apply border-amber-300 bg-amber-50 text-amber-700; }
+  .complete-trip { @apply mt-5 md:ml-auto md:w-64; }
 }
