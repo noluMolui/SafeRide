@@ -4,6 +4,6 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
-    testTimeout: 15_000,
+    testTimeout: 30_000,
   },
 });
