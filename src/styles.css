@@ -192,4 +192,96 @@
   .checkin-actions button.selected.dropped { @apply border-green-300 bg-green-50 text-green-700; }
   .checkin-actions button.selected.absent { @apply border-amber-300 bg-amber-50 text-amber-700; }
   .complete-trip { @apply mt-5 md:ml-auto md:w-64; }
+
+  .history-toolbar, .fee-toolbar { @apply mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center; }
+  .history-toolbar p { @apply text-muted; }
+  .history-list { @apply grid gap-3; }
+  .history-card { @apply flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 hover:border-blue-200; }
+  .history-date { @apply flex w-16 shrink-0 flex-col border-r border-slate-200 pr-4 text-sm; }
+  .history-date strong { @apply text-base; }
+  .history-date span { @apply mt-1 text-muted; }
+  .history-copy { @apply min-w-0 flex-1; }
+  .history-copy h2 { @apply truncate; }
+  .history-copy p { @apply mt-1 flex items-center gap-2 text-sm text-muted; }
+  .history-counts { @apply mt-3 flex flex-wrap gap-2 text-xs text-muted; }
+  .history-counts span { @apply rounded-full bg-soft px-2 py-1; }
+  .history-counts .picked-count { @apply bg-blue-50 text-blue-700; }
+  .history-counts .dropped-count { @apply bg-green-50 text-green-700; }
+  .load-more { @apply mx-auto mt-5 w-auto px-5; }
+  .trip-detail-card { @apply mb-4 rounded-xl border border-slate-200 bg-white p-5; }
+  .trip-detail-card h2 { @apply mt-3 text-xl; }
+  .trip-detail-card p { @apply mt-1 text-sm text-muted; }
+  .timeline-list { @apply grid gap-3; }
+  .timeline-row { @apply flex gap-3 rounded-xl border border-slate-200 bg-white p-4; }
+  .timeline-row p { @apply mt-1 text-sm text-muted; }
+
+  .profile-banner { @apply mb-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-800; }
+  .profile-banner p { @apply flex flex-col; }
+  .profile-banner p span { @apply mt-1 text-sm text-amber-700; }
+  .profile-grid { @apply grid gap-4 lg:grid-cols-2; }
+  .profile-card, .settings-card { @apply rounded-xl border border-slate-200 bg-white p-5; }
+  .profile-card-heading { @apply flex items-start justify-between gap-3; }
+  .profile-card-heading > div { @apply flex flex-col; }
+  .profile-card-heading > div > span { @apply text-sm text-muted; }
+  .profile-card-heading h2 { @apply mt-2; }
+  .verified-badge, .warning-badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold; }
+  .verified-badge { @apply bg-green-50 text-green-700; }
+  .warning-badge { @apply bg-amber-50 text-amber-700; }
+  .profile-facts { @apply my-5 grid grid-cols-2 gap-3 border-y border-slate-100 py-4; }
+  .profile-facts p { @apply flex flex-col text-sm; }
+  .profile-facts p span { @apply text-muted; }
+  .profile-facts p strong { @apply mt-1; }
+  .valid-text { @apply text-green-700; }
+  .warning-text { @apply text-amber-700; }
+  .vehicle-name { @apply mt-2 text-sm text-muted; }
+  .settings-card { @apply mt-5; }
+  .settings-grid { @apply mt-4 grid gap-4 border-t border-slate-100 pt-4 sm:grid-cols-2; }
+  .settings-grid p { @apply flex flex-col text-sm; }
+  .settings-grid p span { @apply text-muted; }
+  .settings-grid p strong { @apply mt-1; }
+  .danger-zone { @apply mt-5 flex flex-col justify-between gap-4 rounded-xl border border-red-200 bg-red-50 p-5 sm:flex-row sm:items-center; }
+  .danger-zone p { @apply mt-1 text-sm text-red-700; }
+  .danger-actions { @apply flex gap-2; }
+  .delete-button { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-4 font-semibold text-red-700; }
+  .confirm-panel { @apply fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-slate-200 bg-white p-5 shadow-xl; }
+  .confirm-panel p { @apply mt-2 leading-6 text-muted; }
+  .confirm-panel > div { @apply mt-5 grid grid-cols-2 gap-3; }
+
+  .month-picker { @apply flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-1 sm:w-72; }
+  .month-picker button { @apply grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-soft; }
+  .month-picker strong { @apply flex-1 text-center; }
+  .fee-actions { @apply flex gap-2; }
+  .fee-actions .secondary-button { @apply w-auto px-4; }
+  .fee-summary { @apply mb-5 grid gap-3 sm:grid-cols-3; }
+  .fee-summary article { @apply flex flex-col rounded-xl border border-slate-200 bg-white p-4; }
+  .fee-summary article span { @apply text-sm text-muted; }
+  .fee-summary article strong { @apply mt-2 text-xl; }
+  .fee-summary .outstanding { @apply border-amber-200 bg-amber-50; }
+  .fee-filter-row { @apply mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center; }
+  .filter-chips { @apply flex gap-2 overflow-x-auto; }
+  .filter-chips button { @apply min-h-10 shrink-0 rounded-full border border-slate-200 px-3 text-sm font-semibold text-muted; }
+  .filter-chips button.active { @apply border-brand bg-brand text-white; }
+  .fee-search { @apply flex min-h-11 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-muted; }
+  .fee-search input { @apply w-full outline-none; }
+  .fee-list { @apply grid gap-2; }
+  .fee-row { @apply flex min-h-20 items-center gap-3 rounded-xl border border-slate-200 bg-white p-4; }
+  .fee-copy { @apply min-w-0 flex-1; }
+  .fee-copy strong { @apply block truncate; }
+  .fee-copy span { @apply mt-1 block text-xs text-muted; }
+  .fee-value { @apply hidden min-w-28 flex-col items-end sm:flex; }
+  .fee-status { @apply mt-1 rounded-full bg-soft px-2 py-1 text-xs font-bold text-muted; }
+  .fee-status.paid { @apply bg-green-50 text-green-700; }
+  .fee-status.overdue { @apply bg-red-50 text-red-700; }
+  .fee-status.pending { @apply bg-blue-50 text-blue-700; }
+  .mark-paid { @apply min-h-10 rounded-lg bg-green-50 px-3 text-xs font-bold text-green-700; }
+
+  .fee-form { @apply max-w-3xl; }
+  .fee-status-options { @apply grid grid-cols-3 gap-2; }
+  .fee-status-options button { @apply min-h-12 rounded-lg border border-slate-200 font-semibold text-muted; }
+  .fee-status-options button.active { @apply border-brand bg-blue-50 text-brand; }
+  .paid-fields { @apply grid gap-4 rounded-xl bg-soft p-4 sm:grid-cols-3; }
+  .fee-note { @apply min-h-24 resize-y; }
+  .fee-form-actions { @apply flex flex-col gap-3 sm:flex-row; }
+  .fee-form-actions .primary-button { @apply sm:w-auto sm:flex-1; }
+  .fee-form-actions .delete-button { @apply sm:w-auto; }
 }

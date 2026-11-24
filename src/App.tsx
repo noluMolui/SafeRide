@@ -11,6 +11,10 @@ import { RouteList } from "./features/driver/RouteList";
 import { RouteForm } from "./features/driver/RouteForm";
 import { RouteRoster } from "./features/driver/RouteRoster";
 import { ActiveTrip } from "./features/driver/ActiveTrip";
+import { TripHistory, TripDetail } from "./features/driver/TripHistory";
+import { ComplianceProfile } from "./features/driver/ComplianceProfile";
+import { FeeLedger } from "./features/driver/FeeLedger";
+import { FeeEntry } from "./features/driver/FeeEntry";
 
 export function App() {
   const [signup, setSignup] = useState<SignupValues>(emptySignup);
@@ -27,6 +31,12 @@ export function App() {
       <Route path="/driver/routes/:id/edit" element={<RouteForm />} />
       <Route path="/driver/routes/:id" element={<RouteRoster />} />
       <Route path="/driver/trip/:tripId" element={<ActiveTrip />} />
+      <Route path="/driver/trips" element={<TripHistory />} />
+      <Route path="/driver/trips/:id" element={<TripDetail />} />
+      <Route path="/driver/profile" element={<ComplianceProfile />} />
+      <Route path="/driver/fees" element={<FeeLedger />} />
+      <Route path="/driver/fees/new" element={<FeeEntry />} />
+      <Route path="/driver/fees/:id" element={<FeeEntry />} />
       <Route
         path="/signup/driver"
         element={
