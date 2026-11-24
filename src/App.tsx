@@ -15,6 +15,11 @@ import { TripHistory, TripDetail } from "./features/driver/TripHistory";
 import { ComplianceProfile } from "./features/driver/ComplianceProfile";
 import { FeeLedger } from "./features/driver/FeeLedger";
 import { FeeEntry } from "./features/driver/FeeEntry";
+import { ParentHome } from "./features/parent/ParentHome";
+import { ChildProfile } from "./features/parent/ChildProfile";
+import { ChildrenList } from "./features/parent/ChildrenList";
+import { LinkDriver } from "./features/parent/LinkDriver";
+import { ParentTripHistory } from "./features/parent/ParentTripHistory";
 
 export function App() {
   const [signup, setSignup] = useState<SignupValues>(emptySignup);
@@ -37,6 +42,12 @@ export function App() {
       <Route path="/driver/fees" element={<FeeLedger />} />
       <Route path="/driver/fees/new" element={<FeeEntry />} />
       <Route path="/driver/fees/:id" element={<FeeEntry />} />
+      <Route path="/parent/home" element={<ParentHome />} />
+      <Route path="/parent/children" element={<ChildrenList />} />
+      <Route path="/parent/children/new" element={<ChildProfile />} />
+      <Route path="/parent/children/:id/edit" element={<ChildProfile />} />
+      <Route path="/parent/link" element={<LinkDriver />} />
+      <Route path="/parent/children/:id/history" element={<ParentTripHistory />} />
       <Route
         path="/signup/driver"
         element={
