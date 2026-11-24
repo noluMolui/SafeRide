@@ -20,6 +20,9 @@ import { ChildProfile } from "./features/parent/ChildProfile";
 import { ChildrenList } from "./features/parent/ChildrenList";
 import { LinkDriver } from "./features/parent/LinkDriver";
 import { ParentTripHistory } from "./features/parent/ParentTripHistory";
+import { ParentFees } from "./features/parent/ParentFees";
+import { ParentAccount } from "./features/parent/ParentAccount";
+import { AdminVerification } from "./features/admin/AdminVerification";
 
 export function App() {
   const [signup, setSignup] = useState<SignupValues>(emptySignup);
@@ -48,6 +51,9 @@ export function App() {
       <Route path="/parent/children/:id/edit" element={<ChildProfile />} />
       <Route path="/parent/link" element={<LinkDriver />} />
       <Route path="/parent/children/:id/history" element={<ParentTripHistory />} />
+      <Route path="/parent/fees" element={<ParentFees />} />
+      <Route path="/parent/account" element={<ParentAccount />} />
+      <Route path="/admin/verifications" element={<AdminVerification />} />
       <Route
         path="/signup/driver"
         element={
