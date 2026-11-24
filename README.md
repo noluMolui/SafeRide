@@ -2,26 +2,40 @@
 
 **Neighbourhood scholar transport & safety platform for South African parents and independent kombi/minibus operators.**
 
-SafeRide replaces WhatsApp check-ins and paper payment notebooks with real-time trip check-ins, delay alerts, driver compliance profiles, and a monthly fee ledger.
+SafeRide aims to replace WhatsApp check-ins and paper payment notebooks with real-time trip check-ins, delay alerts, driver compliance profiles, and a monthly fee ledger.
 
-| For parents | For drivers |
-|---|---|
-| Live `Picked Up` / `Dropped Off` / `Absent` status per child | One-tap check-ins, even offline |
-| Delay alerts and trip history | Roster with emergency contacts and allergy notes |
-| Driver PDP and roadworthy status at a glance | Compliance profile that builds trust |
-| Fee balance and payment history | Monthly fee ledger (`Pending` / `Paid` / `Overdue`) |
+| For parents                                                  | For drivers                                         |
+| ------------------------------------------------------------ | --------------------------------------------------- |
+| Live `Picked Up` / `Dropped Off` / `Absent` status per child | One-tap check-ins, even offline                     |
+| Delay alerts and trip history                                | Roster with emergency contacts and allergy notes    |
+| Driver PDP and roadworthy status at a glance                 | Compliance profile that builds trust                |
+| Fee balance and payment history                              | Monthly fee ledger (`Pending` / `Paid` / `Overdue`) |
 
+> **Status:** MVP (V1) in development. Scope is defined in [`docs/PRD.md`](docs/PRD.md); the business case is in [`BUSINESS.md`](BUSINESS.md).
 
-> **Status:** MVP (V1) in development. Scope is defined in [`docs/PRD.md`](docs/PRD.md); the business case is in [`docs/BUSINESS.md`](docs/BUSINESS.md).
-stitch designs : https://stitch.google.com/projects/10900338452761913187
+The current mobile-first frontend preview covers the first three PRD screens:
+login, sign-up and driver compliance. This is **not an operational
+authentication system**. No accounts are created, credentials sent, consent
+recorded, or documents uploaded. Form details stay in browser memory and
+disappear when the page is refreshed or closed. Privacy notice text and
+password reset are pending. Do not enter real personal information or
+documents. Server-side validation, authorisation, private storage and the rest
+of the PRD remain to be implemented before launch.
+
+Design references in `docs/designs` are named `Sxx-screen-name.png`, using the
+uppercase screen ID and full screen name from the PRD for easy sorting and
+searching. They are visual references, not feature specifications: the PRD
+takes precedence where a design includes out-of-scope features.
+
+Designs: https://stitch.google.com/projects/10900338452761913187
 ---
 
 ## Documentation
 
-| Doc | Purpose |
-|---|---|
+| Doc                          | Purpose                                                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`docs/PRD.md`](docs/PRD.md) | Product requirements: RBAC matrix, features F1–F4 with Given/When/Then acceptance criteria, database schema, screen inventory, NFRs and non-goals |
-| [`docs/BUSINESS.md`](docs/BUSINESS.md) | Business model, pricing, unit economics, go-to-market, risks |
+| [`BUSINESS.md`](BUSINESS.md) | Business model, pricing, unit economics, go-to-market, risks                                                                                      |
 
 The PRD is the source of truth. If code and PRD disagree, update one of them in the same pull request.
 
@@ -29,84 +43,41 @@ The PRD is the source of truth. If code and PRD disagree, update one of them in 
 
 ## Tech Stack
 
-- **Frontend:** React 18, TypeScript (strict), Vite, Tailwind CSS, React Router, TanStack Query, Zod
-- **Backend:** Supabase (PostgreSQL, Auth, Row-Level Security, Realtime, Storage, pg_cron)
-- **Testing:** Vitest + Testing Library (unit), pgTAP or Vitest against local Supabase (database and RLS), Playwright (E2E)
-- **CI/CD:** GitHub Actions
+- **Current frontend:** React 18, TypeScript, Vite, Tailwind CSS, React Router and Zod
+- **Planned backend:** Supabase (PostgreSQL, Auth, Row-Level Security, Realtime, Storage and pg_cron), as described in the PRD
+- **Current tests:** Vitest and Testing Library
 
 ---
 
-## Getting Started
+## Run locally
 
-### Prerequisites
-- Node.js 20+ and npm
-- [Supabase CLI](https://supabase.com/docs/guides/cli)
-- Docker (required by the Supabase local stack)
+Requires Node.js 20.19+ or 22.12+.
 
-### 1. Install
-```bash
-git clone <your-repo-url> saferide
-cd saferide
+```sh
 npm install
-```
-
-### 2. Start the local backend
-```bash
-supabase start          # starts local Postgres, Auth, Realtime, Storage
-supabase db reset       # applies supabase/migrations/* and supabase/seed.sql
-```
-`supabase start` prints the local API URL and anon key. Use them in the next step.
-
-### 3. Configure environment
-Copy the example file and fill in the values:
-```bash
-cp .env.example .env.local
-```
-```dotenv
-VITE_SUPABASE_URL=http://127.0.0.1:54321
-VITE_SUPABASE_ANON_KEY=<anon key printed by supabase start>
-```
-> **Never** put the Supabase `service_role` key in `.env.local`, client code, or CI logs. Only the `anon` key belongs in the browser bundle.
-
-### 4. Run the app
-```bash
 npm run dev
 ```
-Open the URL Vite prints (default `http://localhost:5173`).
 
-### Seeded test users (local only)
-`supabase/seed.sql` creates users for every role, defined in PRD §4.6: `admin`, `driverA`, `driverB`, `driverExpired` (PDP expired), `parentA`, `parentB`. Passwords are listed in the seed file and must never be used outside local/CI environments.
+Open the address printed by Vite.
 
 ---
 
-## Scripts
+## Validation
 
-Add these to `package.json` if they are not present yet.
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the Vite dev server |
-| `npm run build` | Type-check and build for production |
-| `npm run preview` | Preview the production build |
-| `npm run lint` | ESLint |
-| `npm run format:check` | Prettier check |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Vitest unit/integration tests |
-| `npm run test:coverage` | Vitest with coverage (gate: 80%) |
-| `npm run test:db` | Database, constraint and RLS tests against local Supabase |
-| `npm run test:e2e` | Playwright E2E (375 px and 1280 px projects) |
+Run `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build` to
+validate changes.
 
 ---
 
 ## Project Structure
 
-> Target layout. Adjust as the codebase grows, but keep migrations and tests in these locations so CI keeps working.
+> Target layout from the PRD; some components are not implemented in the current frontend preview.
 
 ```
 .
 ├── docs/
-│   ├── PRD.md
-│   └── BUSINESS.md
+│   └── PRD.md
+├── BUSINESS.md
 ├── supabase/
 │   ├── migrations/          # SQL migrations (0001_init.sql from PRD §4.2 onward)
 │   ├── tests/               # pgTAP / RLS tests (PRD §2.4, matrix N1–N17)
@@ -142,52 +113,12 @@ Add these to `package.json` if they are not present yet.
 
 ---
 
-## Testing and TDD
-
-Write the failing test first, then the migration, policy or UI.
-
-- **Traceability:** every test title starts with its acceptance-criteria ID from the PRD, for example `AC-3.15 dropped_off before picked_up is rejected`. CI fails if any AC ID in `docs/PRD.md` has no matching test.
-- **Authorization:** the negative test matrix N1–N17 (PRD §2.4) must pass in full. This is a launch gate.
-- **E2E:** happy paths for F1–F4 at 375 px and 1280 px, plus two-browser tests (driver and parent) for real-time updates.
-
-```bash
-supabase start && supabase db reset
-npm run test:db
-npm test
-npm run test:e2e
-```
-
----
-
-## Continuous Integration and Deployment
-
-`.github/workflows/ci.yml` runs on every pull request and on `main`:
-
-1. Install, lint, format check, type-check
-2. Start local Supabase, apply migrations and seed, run database/RLS tests
-3. Unit and integration tests with the coverage gate
-4. Build, then Playwright E2E
-5. Lighthouse CI budgets (mobile performance ≥ 85, accessibility ≥ 90)
-6. On `main` only: apply migrations to production (`supabase db push`), deploy the frontend, run a post-deploy smoke test (login page responds; every `public` table has RLS enabled)
-
-**Required GitHub secrets** (names are suggestions; set them under *Settings → Secrets and variables → Actions*):
-
-| Secret | Used for |
-|---|---|
-| `SUPABASE_ACCESS_TOKEN` | Supabase CLI auth |
-| `SUPABASE_PROJECT_REF` | Production project reference |
-| `SUPABASE_DB_PASSWORD` | `supabase db push` |
-| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Production frontend build |
-| Hosting token (Vercel, Netlify or Cloudflare) | Frontend deploy |
-
----
-
 ## Contributing
 
 1. Branch from `main`: `feat/<short-name>` or `fix/<short-name>`.
 2. Start from the relevant requirement or AC ID in `docs/PRD.md`.
 3. Write tests first, keep commits small, and use [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `test:`, `docs:`).
-4. Open a pull request. CI must be green and the PR description should list the AC IDs it covers.
+4. Open a pull request. Ensure configured checks pass and list the AC IDs it covers.
 5. Schema changes go in a **new** migration file. Never edit an applied migration.
 
 ---
