@@ -379,4 +379,58 @@
   .parent-history-card p { @apply mt-2 flex items-center gap-2 text-sm text-muted; }
   .parent-delay { @apply mt-3 flex flex-col rounded-lg bg-amber-50 p-3 text-xs text-amber-800; }
   .parent-delay span { @apply mt-1; }
+
+  .parent-account-form { @apply max-w-3xl; }
+  .parent-settings-card { @apply mt-5 max-w-3xl rounded-xl border border-slate-200 bg-white p-5; }
+  .parent-settings-card a { @apply mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-brand; }
+  .parent-balance-card { @apply mb-5 flex flex-col justify-between gap-4 rounded-xl bg-brand p-5 text-white sm:flex-row sm:items-center; }
+  .parent-balance-card > div:first-child { @apply flex flex-col; }
+  .parent-balance-card > div:first-child span { @apply text-sm text-blue-100; }
+  .parent-balance-card > div:first-child strong { @apply mt-1 text-2xl; }
+  .overdue-balance { @apply flex items-center gap-3 rounded-lg bg-white/10 p-3; }
+  .overdue-balance p { @apply flex flex-col; }
+  .overdue-balance p span { @apply mt-1 text-xs text-blue-100; }
+  .parent-fee-section { @apply mb-5 rounded-xl border border-slate-200 bg-white p-4; }
+  .parent-fee-section h2 { @apply mb-3; }
+  .parent-fee-row { @apply flex min-h-16 items-center gap-3 border-t border-slate-100 py-3 first:border-t-0; }
+  .fee-month-icon { @apply grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-amber-50 text-xs font-bold text-amber-700; }
+  .paid-icon { @apply grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-green-50 text-green-700; }
+  .payment-helper { @apply rounded-lg bg-blue-50 p-3 text-sm text-slate-700; }
+
+  .admin-app { @apply min-h-screen bg-slate-50 lg:flex; }
+  .admin-sidebar { @apply hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white p-5 lg:flex; }
+  .admin-brand { @apply flex items-center gap-3 text-lg font-bold text-ink; }
+  .admin-brand > span { @apply grid h-10 w-10 place-items-center rounded-xl bg-brand text-white; }
+  .admin-sidebar nav { @apply mt-10; }
+  .admin-sidebar nav a { @apply flex min-h-12 items-center gap-3 rounded-lg bg-blue-50 px-3 font-semibold text-brand; }
+  .admin-main { @apply min-w-0 flex-1; }
+  .admin-content { @apply mx-auto w-full max-w-[1400px] px-5 py-6 lg:px-8; }
+  .admin-header { @apply mb-5 flex items-end justify-between; }
+  .admin-header p { @apply text-sm font-semibold text-brand; }
+  .admin-header h1 { @apply mt-1; }
+  .admin-count { @apply rounded-full bg-white px-3 py-2 text-sm font-semibold text-muted shadow-sm; }
+  .admin-filter-row { @apply mb-4 flex gap-2 overflow-x-auto pb-1; }
+  .admin-filter-row button { @apply min-h-10 shrink-0 rounded-full border border-slate-200 bg-white px-3 text-sm font-semibold text-muted; }
+  .admin-filter-row button.active { @apply border-brand bg-brand text-white; }
+  .admin-table-wrap { @apply overflow-x-auto rounded-xl border border-slate-200 bg-white; }
+  .admin-table { @apply w-full min-w-[920px] border-collapse text-left text-sm; }
+  .admin-table th { @apply border-b border-slate-200 px-4 py-3 text-xs font-bold uppercase text-muted; }
+  .admin-table td { @apply border-b border-slate-100 px-4 py-4; }
+  .admin-table td:first-child { @apply flex flex-col; }
+  .admin-table td:first-child span { @apply mt-1 text-muted; }
+  .verification-status { @apply inline-flex rounded-full bg-soft px-2.5 py-1 text-xs font-bold text-muted; }
+  .verification-status.pending, .verification-status.unverified { @apply bg-amber-50 text-amber-700; }
+  .verification-status.verified { @apply bg-green-50 text-green-700; }
+  .verification-status.rejected { @apply bg-red-50 text-red-700; }
+  .document-link { @apply inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 font-semibold text-brand disabled:cursor-not-allowed disabled:text-muted; }
+  .admin-actions { @apply flex gap-2; }
+  .verify-button, .reject-button { @apply min-h-10 rounded-lg px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50; }
+  .verify-button { @apply bg-green-50 text-green-700; }
+  .reject-button { @apply bg-red-50 text-red-700; }
+  .admin-empty { @apply p-8 text-center text-muted; }
+  .reject-dialog { @apply fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-slate-200 bg-white p-5 shadow-xl; }
+  .reject-dialog p { @apply mt-1 text-sm text-muted; }
+  .reject-dialog textarea { @apply mt-4 min-h-28 resize-y; }
+  .reject-dialog > span { @apply mt-1 block text-right text-xs text-muted; }
+  .reject-dialog > div { @apply mt-4 grid grid-cols-2 gap-3; }
 }
