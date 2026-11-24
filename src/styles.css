@@ -284,4 +284,99 @@
   .fee-form-actions { @apply flex flex-col gap-3 sm:flex-row; }
   .fee-form-actions .primary-button { @apply sm:w-auto sm:flex-1; }
   .fee-form-actions .delete-button { @apply sm:w-auto; }
+
+  .parent-app { @apply min-h-screen bg-canvas pb-20 lg:flex lg:pb-0; }
+  .parent-sidebar { @apply hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white p-5 lg:flex; }
+  .parent-brand { @apply flex items-center gap-3 text-xl font-bold text-ink; }
+  .parent-brand > span { @apply grid h-10 w-10 place-items-center rounded-xl bg-brand text-white; }
+  .parent-brand.compact { @apply text-lg; }
+  .parent-brand.compact > span { @apply h-9 w-9; }
+  .parent-sidebar nav { @apply mt-10 flex flex-col gap-2; }
+  .parent-sidebar nav a { @apply flex min-h-12 items-center gap-3 rounded-lg px-3 font-semibold text-muted hover:bg-soft hover:text-ink; }
+  .parent-sidebar nav a.active { @apply bg-blue-50 text-brand; }
+  .parent-main { @apply min-w-0 flex-1; }
+  .parent-mobile-header { @apply sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-5 lg:hidden; }
+  .parent-content { @apply mx-auto w-full max-w-[1120px] px-5 pb-8 pt-6 lg:px-8 lg:pt-8; }
+  .parent-content > h1 { @apply mb-5 text-3xl; }
+  .parent-bottom-nav { @apply fixed bottom-0 left-0 right-0 z-30 grid h-16 grid-cols-4 border-t border-slate-200 bg-white lg:hidden; }
+  .parent-bottom-nav a { @apply flex flex-col items-center justify-center gap-1 text-xs font-semibold text-muted; }
+  .parent-bottom-nav a.active { @apply text-brand; }
+  .parent-status-bar { @apply mb-4 flex items-center justify-between text-sm text-muted; }
+  .parent-status-bar b { @apply text-green-700; }
+  .parent-actions, .parent-toolbar { @apply mb-5 flex justify-end gap-2; }
+  .parent-toolbar { @apply items-center justify-between; }
+  .parent-toolbar p { @apply text-muted; }
+  .child-status-card { @apply rounded-xl border border-slate-200 bg-white p-5; }
+  .child-status-header { @apply flex items-center gap-3 border-b border-slate-100 pb-4; }
+  .child-status-header > div:nth-child(2) { @apply min-w-0 flex-1; }
+  .child-status-header p { @apply mt-1 text-sm text-muted; }
+  .status-pill { @apply inline-flex shrink-0 rounded-full px-2.5 py-1 text-xs font-bold; }
+  .status-pill.picked { @apply bg-blue-50 text-blue-700; }
+  .status-pill.waiting { @apply bg-soft text-muted; }
+  .parent-trip-grid { @apply my-4 grid gap-3 md:grid-cols-2; }
+  .parent-trip-grid article { @apply rounded-lg bg-slate-50 p-4; }
+  .parent-trip-grid h3 { @apply mt-3; }
+  .parent-trip-grid article > p { @apply mt-2 flex items-center gap-2 text-sm text-muted; }
+  .compliance-mini { @apply mt-3 flex flex-wrap gap-2; }
+  .compliance-mini span { @apply rounded-full bg-green-50 px-2 py-1 text-xs font-bold text-green-700; }
+  .delay-banner { @apply flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800; }
+  .delay-banner p { @apply flex flex-col; }
+  .delay-banner p span { @apply mt-1 text-sm; }
+  .history-link { @apply mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-brand; }
+
+  .child-form { @apply max-w-4xl; }
+  .child-form-grid { @apply grid gap-4 md:grid-cols-2 lg:grid-cols-3; }
+  .emergency-section { @apply border-t border-slate-100 pt-5; }
+  .notes-grid { @apply grid gap-4 md:grid-cols-2; }
+  .child-note { @apply min-h-28 resize-y; }
+  .field-block small { @apply float-right font-normal text-muted; }
+  .privacy-helper { @apply flex items-start gap-2 rounded-lg bg-blue-50 p-3 text-sm leading-6 text-slate-700; }
+  .child-form-actions { @apply flex flex-col gap-3 sm:flex-row; }
+  .child-form-actions .primary-button { @apply sm:w-auto sm:flex-1; }
+
+  .children-list { @apply grid gap-4; }
+  .child-list-card { @apply rounded-xl border border-slate-200 bg-white p-5; }
+  .child-list-header { @apply flex items-center gap-3; }
+  .child-list-header > div:nth-child(2) { @apply min-w-0 flex-1; }
+  .child-list-header p { @apply mt-1 text-sm text-muted; }
+  .enrollment-list { @apply mt-4 grid gap-2 border-t border-slate-100 pt-4; }
+  .enrollment-list > div { @apply flex items-center gap-3 rounded-lg bg-slate-50 p-3; }
+  .enrollment-list p { @apply flex min-w-0 flex-1 flex-col text-sm; }
+  .enrollment-list p span { @apply mt-1 truncate text-muted; }
+  .enrollment-list button { @apply min-h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-muted; }
+  .link-driver-banner { @apply mt-5 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-brand; }
+  .link-driver-banner > span { @apply grid h-10 w-10 place-items-center rounded-lg bg-white; }
+  .link-driver-banner > div { @apply flex-1; }
+  .link-driver-banner p { @apply mt-1 text-sm text-muted; }
+
+  .link-code-form { @apply max-w-xl; }
+  .link-code-form .form-stack { @apply flex flex-col; }
+  .link-code-form .primary-button { @apply mt-4; }
+  .driver-preview { @apply mt-5 max-w-xl rounded-xl border border-slate-200 bg-white p-5; }
+  .driver-preview-header { @apply flex items-center gap-3; }
+  .driver-preview-header > div:nth-child(2) { @apply flex-1; }
+  .driver-preview-header p { @apply mt-1 text-sm text-muted; }
+  .driver-preview-grid { @apply my-5 grid gap-3 border-y border-slate-100 py-4 sm:grid-cols-2; }
+  .driver-preview-grid p { @apply flex flex-col text-sm; }
+  .driver-preview-grid p span { @apply text-muted; }
+  .driver-preview-grid p strong { @apply mt-1; }
+  .driver-preview .primary-button { @apply mt-4; }
+  .route-request-success { @apply flex max-w-xl flex-col items-center rounded-xl border border-slate-200 bg-white p-8 text-center; }
+  .route-request-success > span { @apply grid h-14 w-14 place-items-center rounded-full bg-green-50 text-green-700; }
+  .route-request-success h2 { @apply mt-4 text-xl; }
+  .route-request-success p { @apply mt-2 text-muted; }
+  .route-request-success .primary-button { @apply mt-5; }
+
+  .parent-child-select { @apply relative mb-5 flex max-w-sm items-center gap-3 rounded-lg border border-slate-200 bg-white p-3; }
+  .parent-child-select span { @apply text-sm font-semibold text-muted; }
+  .parent-child-select select { @apply flex-1 appearance-none bg-transparent pr-6 font-semibold outline-none; }
+  .parent-child-select svg { @apply pointer-events-none absolute right-3; }
+  .parent-history-list { @apply grid gap-3; }
+  .parent-history-card { @apply flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4; }
+  .parent-history-date { @apply flex w-16 shrink-0 flex-col border-r border-slate-200 pr-4; }
+  .parent-history-date span { @apply mt-2 text-xs font-bold text-muted; }
+  .parent-history-card h2 { @apply text-base; }
+  .parent-history-card p { @apply mt-2 flex items-center gap-2 text-sm text-muted; }
+  .parent-delay { @apply mt-3 flex flex-col rounded-lg bg-amber-50 p-3 text-xs text-amber-800; }
+  .parent-delay span { @apply mt-1; }
 }
