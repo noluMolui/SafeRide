@@ -1,8 +1,9 @@
 import { ArrowLeft, ArrowRight, BusFront, FileUp, ShieldCheck, X } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Field, Notice } from "./ui";
 import { complianceSchema, fileError, southAfricaToday } from "./validation";
+import { supabase } from "../../lib/supabase";
 
 type Values = {
   pdp: string;
@@ -40,11 +41,13 @@ function DocumentInput({ id, label }: { id: string; label: string }) {
 }
 
 export function DriverCompliance() {
+  const navigate = useNavigate();
   const [values, setValues] = useState<Values>({ pdp: "", pdpExpiry: "", suburbs: [], registration: "", model: "", seats: 15, roadworthyExpiry: "" });
   const [suburb, setSuburb] = useState("");
   const [suburbError, setSuburbError] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   function update<K extends keyof Values>(key: K, value: Values[K]) {
     setValues((current) => ({ ...current, [key]: value }));
   }
@@ -57,7 +60,7 @@ export function DriverCompliance() {
     setSuburb("");
     setSuburbError("");
   }
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const result = complianceSchema.safeParse(values);
     if (!result.success) {
@@ -71,7 +74,49 @@ export function DriverCompliance() {
       return;
     }
     setErrors({});
-    setMessage("Registration is not available yet. Your details and documents have not been saved or sent.");
+    if (!supabase) {
+      setMessage("Authentication is not configured for this deployment.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setMessage("");
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData.user || authData.user.user_metadata.role !== "driver") {
+      setIsSubmitting(false);
+      setMessage("Sign in with your driver account to finish registration.");
+      return;
+    }
+
+    const { error } = await supabase.rpc("register_driver_profile", {
+      profile: {
+        full_name: authData.user.user_metadata.full_name,
+        phone_e164: authData.user.user_metadata.phone_e164,
+        pdp_number: result.data.pdp,
+        pdp_expiry_date: result.data.pdpExpiry,
+        service_suburbs: result.data.suburbs,
+      },
+      vehicle: {
+        registration_number: result.data.registration,
+        make_model: result.data.model,
+        seating_capacity: result.data.seats,
+        roadworthy_expiry_date: result.data.roadworthyExpiry,
+      },
+    });
+    setIsSubmitting(false);
+
+    if (error) {
+      if (error.message.includes("pdp_expired")) {
+        setMessage("Your PDP has expired. Renew it before registering.");
+      } else if (error.message.includes("roadworthy_expired")) {
+        setMessage("Your roadworthy certificate has expired. Renew it before registering.");
+      } else {
+        setMessage("We couldn't complete driver registration. Check your details and try again.");
+      }
+      return;
+    }
+
+    navigate("/driver/dashboard", { replace: true });
   }
   return (
     <main className="auth-page compliance-page">
@@ -103,7 +148,7 @@ export function DriverCompliance() {
           <DocumentInput id="roadworthy-document" label="Roadworthy certificate" />
         </section>
         <Notice>Parents will see your compliance status. Documents are intended for private review when the backend is connected.</Notice>
-        <button className="primary-button" type="submit">Finish registration <ArrowRight size={20} /></button>
+        <button className="primary-button" type="submit" disabled={isSubmitting}>{isSubmitting ? "Finishing registration…" : "Finish registration"} <ArrowRight size={20} /></button>
         {message && <p className="form-message" role="status">{message}</p>}
       </form>
     </main>

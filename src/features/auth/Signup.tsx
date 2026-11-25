@@ -2,7 +2,8 @@ import { ArrowLeft, ArrowRight, BusFront, Check, UsersRound } from "lucide-react
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Brand, Field } from "./ui";
-import { signupSchema } from "./validation";
+import { normalizeSouthAfricanPhone, signupSchema } from "./validation";
+import { supabase } from "../../lib/supabase";
 
 export type SignupValues = {
   role: "parent" | "driver";
@@ -23,10 +24,11 @@ export function Signup({ values, onChange }: { values: SignupValues; onChange: (
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Errors>({});
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   function update<K extends keyof SignupValues>(key: K, value: SignupValues[K]) {
     onChange({ ...values, [key]: value });
   }
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const result = signupSchema.safeParse(values);
     if (!result.success) {
@@ -40,11 +42,42 @@ export function Signup({ values, onChange }: { values: SignupValues; onChange: (
       return;
     }
     setErrors({});
-    if (values.role === "driver") {
-      navigate("/signup/driver");
-    } else {
-      setMessage("Account creation is not available yet. Your details have not been saved or sent.");
+    if (!supabase) {
+      setMessage("Authentication is not configured for this deployment.");
+      return;
     }
+
+    setIsSubmitting(true);
+    setMessage("");
+    const { data, error } = await supabase.auth.signUp({
+      email: result.data.email,
+      password: values.password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+        data: {
+          role: values.role,
+          full_name: result.data.name,
+          phone_e164: normalizeSouthAfricanPhone(result.data.phone),
+          consent: true,
+        },
+      },
+    });
+    setIsSubmitting(false);
+
+    if (error) {
+      setMessage(/already registered|already exists/i.test(error.message)
+        ? "An account with this email already exists. Log in instead."
+        : "We couldn't create your account. Check your details and try again.");
+      return;
+    }
+
+    if (data.session) {
+      navigate(values.role === "driver" ? "/signup/driver" : "/parent/home", { replace: true });
+      return;
+    }
+    setMessage(values.role === "driver"
+      ? "Account created. Confirm your email, then log in to finish driver onboarding."
+      : "Account created. Check your email to confirm your account before logging in.");
   }
 
   return (
@@ -85,7 +118,7 @@ export function Signup({ values, onChange }: { values: SignupValues; onChange: (
           <label className="consent"><input type="checkbox" checked={values.consent} onChange={(e) => update("consent", e.target.checked)} aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? "consent-error" : undefined} /> <span>I agree to the privacy notice and consent to SafeRide processing my personal data in accordance with POPIA. The notice will be published before launch.</span></label>
           {errors.consent && <p id="consent-error" className="field-error" role="alert">{errors.consent}</p>}
         </div>
-        <button className="primary-button" type="submit">{values.role === "driver" ? "Continue" : "Create account"} <ArrowRight size={20} /></button>
+        <button className="primary-button" type="submit" disabled={isSubmitting}>{isSubmitting ? "Creating account…" : values.role === "driver" ? "Continue" : "Create account"} <ArrowRight size={20} /></button>
         {message && <p className="form-message" role="status">{message}</p>}
       </form>
       <p className="bottom-link">Already have an account? <Link to="/login">Log in</Link></p>

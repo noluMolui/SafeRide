@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "./features/auth/Login";
 import { Signup, type SignupValues, emptySignup } from "./features/auth/Signup";
 import { DriverCompliance } from "./features/auth/DriverCompliance";
-import { signupSchema } from "./features/auth/validation";
 import { ResetPassword } from "./features/auth/ResetPassword";
 import { JoinLink } from "./features/auth/JoinLink";
 import { DriverDashboard } from "./features/driver/DriverDashboard";
@@ -54,16 +53,7 @@ export function App() {
       <Route path="/parent/fees" element={<ParentFees />} />
       <Route path="/parent/account" element={<ParentAccount />} />
       <Route path="/admin/verifications" element={<AdminVerification />} />
-      <Route
-        path="/signup/driver"
-        element={
-          signup.role === "driver" && signupSchema.safeParse(signup).success ? (
-            <DriverCompliance />
-          ) : (
-            <Navigate to="/signup" replace />
-          )
-        }
-      />
+      <Route path="/signup/driver" element={<DriverCompliance />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

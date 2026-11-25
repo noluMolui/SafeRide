@@ -3,6 +3,11 @@ import { z } from "zod";
 export const passwordMessage =
   "Password must be at least 8 characters and include a letter and a number";
 
+export function normalizeSouthAfricanPhone(value: string) {
+  const phone = value.replace(/[\s-]/g, "");
+  return phone.startsWith("0") ? `+27${phone.slice(1)}` : phone;
+}
+
 export const signupSchema = z.object({
   role: z.enum(["parent", "driver"]),
   name: z.string().trim().min(2, "Enter your full name").max(100),
