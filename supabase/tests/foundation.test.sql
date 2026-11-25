@@ -1,6 +1,9 @@
 -- SafeRide Phase 1 foundation tests
 begin;
 
+create extension if not exists pgtap with schema extensions;
+set local search_path = extensions, public;
+
 select plan(10);
 
 select has_extension('pgcrypto', 'pgcrypto is enabled');
