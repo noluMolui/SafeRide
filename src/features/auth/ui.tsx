@@ -46,6 +46,3 @@ export function Notice({ children }: { children: ReactNode }) {
   return <div className="notice" role="status"><ShieldCheck size={20} className="shrink-0 text-brand" /> <span>{children}</span></div>;
 }
 
-export function PreviewNotice() {
-  return <Notice>Frontend preview only. Accounts and documents are not saved or sent.</Notice>;
-}
