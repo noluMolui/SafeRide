@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, BusFront, Check, UsersRound } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Brand, Field, PreviewNotice } from "./ui";
+import { Brand, Field } from "./ui";
 import { signupSchema } from "./validation";
 
 export type SignupValues = {
@@ -55,7 +55,6 @@ export function Signup({ values, onChange }: { values: SignupValues; onChange: (
       </header>
       <h1>Create your account</h1>
       <p className="intro">Join SafeRide to get started with scholar transport.</p>
-      <PreviewNotice />
       <form className="form-stack signup-form" noValidate onSubmit={submit}>
         <fieldset>
           <legend className="field-label">I am joining as:</legend>

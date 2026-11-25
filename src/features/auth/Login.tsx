@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { LockKeyhole } from "lucide-react";
-import { Brand, Field, PreviewNotice } from "./ui";
+import { Brand, Field } from "./ui";
 
 export function Login() {
   const [message, setMessage] = useState("");
@@ -17,7 +17,6 @@ export function Login() {
         <Brand />
         <p>Know your child&apos;s trip status without sending a message.</p>
       </div>
-      <PreviewNotice />
       <form className="card form-stack" onSubmit={submit}>
         <Field id="login-email" label="Email" type="email" autoComplete="email" required />
         <Field id="login-password" label="Password" type="password" autoComplete="current-password" required />

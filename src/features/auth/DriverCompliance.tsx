@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, BusFront, FileUp, ShieldCheck, X } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { Field, Notice, PreviewNotice } from "./ui";
+import { Field, Notice } from "./ui";
 import { complianceSchema, fileError, southAfricaToday } from "./validation";
 
 type Values = {
@@ -78,7 +78,6 @@ export function DriverCompliance() {
       <header className="compliance-header"><Link className="back-button" to="/signup" aria-label="Back to account details"><ArrowLeft /></Link><span>Driver Compliance Onboarding</span></header>
       <div className="stepper"><span>✓ <span>1 Details</span></span><i /><strong>2 Compliance</strong></div>
       <p className="intro">Step 2 of 2: South African road and safety credentials</p>
-      <PreviewNotice />
       <form className="form-stack" noValidate onSubmit={submit}>
         <section className="card form-stack">
           <div className="section-title"><div><h2>Professional Driving Permit</h2><p>Required for scholar transport operators in South Africa.</p></div><ShieldCheck size={22} /></div>
