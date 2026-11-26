@@ -3,14 +3,14 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public;
 
-select plan(28);
+select plan(32);
 
 select ok((select relrowsecurity from pg_class where oid = 'public.profiles'::regclass), 'profiles has RLS enabled');
 select ok((select relforcerowsecurity from pg_class where oid = 'public.profiles'::regclass), 'profiles forces RLS');
 select ok((select relrowsecurity from pg_class where oid = 'public.vehicles'::regclass), 'vehicles has RLS enabled');
 select ok((select relforcerowsecurity from pg_class where oid = 'public.vehicles'::regclass), 'vehicles forces RLS');
-select has_policy('public', 'profiles', 'profiles_select_own', 'profile owner select policy exists');
-select has_policy('public', 'vehicles', 'vehicles_select_own', 'vehicle owner select policy exists');
+select ok(exists(select 1 from pg_policies where schemaname = 'public' and tablename = 'profiles' and policyname = 'profiles_select_own'), 'profile owner select policy exists');
+select ok(exists(select 1 from pg_policies where schemaname = 'public' and tablename = 'vehicles' and policyname = 'vehicles_select_own'), 'vehicle owner select policy exists');
 
 select lives_ok($$insert into auth.users (
   id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -24,6 +24,7 @@ select lives_ok($$insert into auth.users (
 )$$, 'parent auth signup creates successfully');
 select is((select role::text from public.profiles where id = '00000000-0000-0000-0000-000000000101'), 'parent', 'parent signup creates a parent profile');
 select ok((select consent_accepted_at is not null from public.profiles where id = '00000000-0000-0000-0000-000000000101'), 'parent consent timestamp is recorded');
+select is((select raw_app_meta_data ->> 'saferide_signup_role' from auth.users where id = '00000000-0000-0000-0000-000000000101'), 'parent', 'signup role is recorded in trusted app metadata');
 
 select lives_ok($$insert into auth.users (
   id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -36,6 +37,7 @@ select lives_ok($$insert into auth.users (
   now(), now()
 )$$, 'driver auth signup creates successfully');
 select is((select count(*)::int from public.profiles where id = '00000000-0000-0000-0000-000000000102'), 0, 'driver profile waits for atomic compliance registration');
+select is((select raw_app_meta_data ->> 'saferide_signup_role' from auth.users where id = '00000000-0000-0000-0000-000000000102'), 'driver', 'driver signup role is recorded in trusted app metadata');
 
 select throws_ok($$insert into auth.users (
   id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -47,6 +49,32 @@ select throws_ok($$insert into auth.users (
   '{"role":"admin","full_name":"Admin Test","phone_e164":"+27821111111","consent":true}',
   now(), now()
 )$$, '22023', 'Only parent and driver roles can self-register', 'admin signup is rejected');
+
+select throws_ok($$insert into auth.users (
+  id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+) values (
+  '00000000-0000-0000-0000-000000000106', 'authenticated', 'authenticated',
+  'missing-role-test@example.invalid', crypt('test-password', gen_salt('bf')), now(),
+  '{"provider":"email","providers":["email"]}', '{"consent":true}', now(), now()
+)$$, '22023', 'Only parent and driver roles can self-register', 'signup with missing role is rejected');
+
+set local session_replication_role = replica;
+insert into auth.users (
+  id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+) values (
+  '00000000-0000-0000-0000-000000000107', 'authenticated', 'authenticated',
+  'tampered-role-test@example.invalid', crypt('test-password', gen_salt('bf')), now(),
+  '{"saferide_signup_role":"parent"}', '{"role":"driver","consent":true}', now(), now()
+);
+set local session_replication_role = origin;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000107';
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-000000000107","role":"authenticated"}';
+select throws_ok($$select public.register_driver_profile(
+  '{"full_name":"Tampered Test","phone_e164":"+27821234567","pdp_number":"PDP12345","pdp_expiry_date":"2099-06-30","service_suburbs":["Fourways"]}'::jsonb,
+  '{"registration_number":"TEST1234","make_model":"Toyota Quantum","seating_capacity":14,"roadworthy_expiry_date":"2099-06-30"}'::jsonb
+)$$, '42501', 'driver_role_required', 'editable user metadata cannot grant a driver role');
 
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000102';
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-000000000102","role":"authenticated"}';
