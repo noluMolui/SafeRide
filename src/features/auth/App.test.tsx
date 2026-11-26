@@ -19,14 +19,24 @@ vi.mock("../../lib/supabase", () => ({
       signUp: authMocks.signUp,
       getUser: authMocks.getUser,
     },
-    from: (table: string) => ({
-      select: (columns: string) => {
-        if (table === "profiles") return { eq: () => ({ maybeSingle: columns === "role" ? authMocks.profileLookup : async () => ({ data: { full_name: "Sipho Dlamini", pdp_expiry_date: "2099-12-31" }, error: null }) }) };
-        if (table === "routes") return { eq: () => ({ order: async () => ({ data: [], error: null }) }) };
-        if (table === "trips") return { eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) };
-        return Promise.resolve({ data: [], error: null });
-      },
-    }),
+    from: (table: string) => {
+      let columns = "";
+      const builder = {
+        select: (selected: string) => { columns = selected; return builder; },
+        eq: () => builder,
+        in: () => builder,
+        order: () => builder,
+        maybeSingle: () => table === "profiles" && columns === "role"
+          ? authMocks.profileLookup()
+          : table === "profiles"
+            ? Promise.resolve({ data: { full_name: "Sipho Dlamini", pdp_expiry_date: "2099-12-31" }, error: null })
+            : table === "trips"
+              ? Promise.resolve({ data: null, error: null })
+              : Promise.resolve({ data: null, error: null }),
+        then: (resolve: (value: { data: unknown[]; error: null }) => unknown, reject: (reason: unknown) => unknown) => Promise.resolve({ data: [], error: null }).then(resolve, reject),
+      };
+      return builder;
+    },
     rpc: authMocks.rpc,
   },
 }));
@@ -46,7 +56,11 @@ describe("authentication", () => {
       data: { user: { id: "driver-1", user_metadata: { role: "driver", full_name: "Sipho Dlamini", phone_e164: "+27821234567" } } },
       error: null,
     });
-    authMocks.rpc.mockResolvedValue({ data: { profile_id: "driver-1" }, error: null });
+    authMocks.rpc.mockImplementation(async (name: string) => {
+      if (name === "register_driver_profile") return { data: { profile_id: "driver-1" }, error: null };
+      if (name === "get_driver_trip_detail") return { data: null, error: { message: "not found" } };
+      return { data: [], error: null };
+    });
     authMocks.profileLookup.mockResolvedValue({ data: { id: "parent-1", role: "parent" }, error: null });
   });
 
@@ -57,7 +71,7 @@ describe("authentication", () => {
     await user.type(screen.getByLabelText("Password"), "Passw0rdA");
     await user.click(screen.getByRole("button", { name: "Log in" }));
     expect(authMocks.signInWithPassword).toHaveBeenCalledWith({ email: "user@example.co.za", password: "Passw0rdA" });
-    expect(screen.getByText("Good morning, Naledi")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Today's trip status" })).toBeInTheDocument();
   });
   it("does not call authentication when login fields are empty", async () => {
     const user = userEvent.setup();
@@ -102,7 +116,7 @@ describe("authentication", () => {
         data: expect.objectContaining({ role: "parent", full_name: "Naledi Mokoena", phone_e164: "+27821234567", consent: true }),
       }),
     }));
-    expect(screen.getByText("Good morning, Naledi")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Today's trip status" })).toBeInTheDocument();
   });
   it("AC-1.2 lets a driver continue to compliance and return to their details", async () => {
     const user = userEvent.setup();

@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { App } from "../../App";
@@ -29,10 +28,8 @@ describe("second five frontend screens", () => {
     expect(screen.getByRole("heading", { name: "Route roster" })).toBeInTheDocument();
   });
 
-  it("S09 updates a learner check-in status", async () => {
-    const user = userEvent.setup();
+  it("S09 reports when Supabase is not configured instead of showing sample check-ins", () => {
     renderRoute("/driver/trip/trip-1");
-    await user.click(screen.getAllByRole("button", { name: /Dropped Off/ })[1]!);
-    expect(screen.getAllByRole("button", { name: /Dropped Off/ })[1]!).toHaveClass("selected");
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 });
