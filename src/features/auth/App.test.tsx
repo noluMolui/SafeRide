@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -19,7 +19,14 @@ vi.mock("../../lib/supabase", () => ({
       signUp: authMocks.signUp,
       getUser: authMocks.getUser,
     },
-    from: () => ({ select: () => ({ eq: () => ({ maybeSingle: authMocks.profileLookup }) }) }),
+    from: (table: string) => ({
+      select: (columns: string) => {
+        if (table === "profiles") return { eq: () => ({ maybeSingle: columns === "role" ? authMocks.profileLookup : async () => ({ data: { full_name: "Sipho Dlamini", pdp_expiry_date: "2099-12-31" }, error: null }) }) };
+        if (table === "routes") return { eq: () => ({ order: async () => ({ data: [], error: null }) }) };
+        if (table === "trips") return { eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) };
+        return Promise.resolve({ data: [], error: null });
+      },
+    }),
     rpc: authMocks.rpc,
   },
 }));
@@ -83,10 +90,10 @@ describe("authentication", () => {
   it("creates a parent account through Supabase after valid details and consent", async () => {
     const user = userEvent.setup();
     render(<MemoryRouter initialEntries={["/signup"]}><App /></MemoryRouter>);
-    await user.type(screen.getByLabelText("Full name"), "Naledi Mokoena");
-    await user.type(screen.getByLabelText("Email address"), "naledi@example.co.za");
-    await user.type(screen.getByLabelText("Mobile phone number"), "082 123 4567");
-    await user.type(screen.getByLabelText("Create password"), "Passw0rdA");
+    fireEvent.change(screen.getByLabelText("Full name"), { target: { value: "Naledi Mokoena" } });
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "naledi@example.co.za" } });
+    fireEvent.change(screen.getByLabelText("Mobile phone number"), { target: { value: "082 123 4567" } });
+    fireEvent.change(screen.getByLabelText("Create password"), { target: { value: "Passw0rdA" } });
     await user.click(screen.getByRole("checkbox"));
     await user.click(screen.getByRole("button", { name: "Create account" }));
     expect(authMocks.signUp).toHaveBeenCalledWith(expect.objectContaining({
@@ -101,10 +108,10 @@ describe("authentication", () => {
     const user = userEvent.setup();
     render(<MemoryRouter initialEntries={["/signup"]}><App /></MemoryRouter>);
     await user.click(screen.getByLabelText(/I'm a Driver/));
-    await user.type(screen.getByLabelText("Full name"), "Sipho Dlamini");
-    await user.type(screen.getByLabelText("Email address"), "sipho@example.co.za");
-    await user.type(screen.getByLabelText("Mobile phone number"), "082 123 4567");
-    await user.type(screen.getByLabelText("Create password"), "Passw0rdA");
+    fireEvent.change(screen.getByLabelText("Full name"), { target: { value: "Sipho Dlamini" } });
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "sipho@example.co.za" } });
+    fireEvent.change(screen.getByLabelText("Mobile phone number"), { target: { value: "082 123 4567" } });
+    fireEvent.change(screen.getByLabelText("Create password"), { target: { value: "Passw0rdA" } });
     await user.click(screen.getByRole("checkbox"));
     await user.click(screen.getByRole("button", { name: /Continue/ }));
     expect(screen.getByText("Professional Driving Permit")).toBeInTheDocument();
@@ -118,10 +125,10 @@ describe("authentication", () => {
     const user = userEvent.setup();
     render(<MemoryRouter initialEntries={["/signup"]}><App /></MemoryRouter>);
     await user.click(screen.getByLabelText(/I'm a Driver/));
-    await user.type(screen.getByLabelText("Full name"), "Sipho Dlamini");
-    await user.type(screen.getByLabelText("Email address"), "sipho@example.co.za");
-    await user.type(screen.getByLabelText("Mobile phone number"), "082 123 4567");
-    await user.type(screen.getByLabelText("Create password"), "Passw0rdA");
+    fireEvent.change(screen.getByLabelText("Full name"), { target: { value: "Sipho Dlamini" } });
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "sipho@example.co.za" } });
+    fireEvent.change(screen.getByLabelText("Mobile phone number"), { target: { value: "082 123 4567" } });
+    fireEvent.change(screen.getByLabelText("Create password"), { target: { value: "Passw0rdA" } });
     await user.click(screen.getByRole("checkbox"));
     await user.click(screen.getByRole("button", { name: /Continue/ }));
 
@@ -138,7 +145,7 @@ describe("authentication", () => {
       profile: expect.objectContaining({ pdp_number: "PDP12345", service_suburbs: ["Fourways"] }),
       vehicle: expect.objectContaining({ registration_number: "CA123456", make_model: "Toyota Quantum" }),
     }));
-    expect(screen.getByText("Good morning, Sipho")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Hello, Sipho" })).toBeInTheDocument();
   });
   it("S04 validates and confirms a password reset request", async () => {
     const user = userEvent.setup();

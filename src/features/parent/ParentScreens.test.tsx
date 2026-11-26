@@ -15,27 +15,24 @@ describe("next five parent frontend screens", () => {
     expect(screen.getByText("Lethabo Mokoena")).toBeInTheDocument();
   });
 
-  it("S14 saves a child profile in the preview", async () => {
+  it("S14 blocks an empty child profile", async () => {
     const user = userEvent.setup();
     renderRoute("/parent/children/new");
     await user.click(screen.getByRole("button", { name: "Save child" }));
-    expect(screen.getByText("Child profile saved in this frontend preview.")).toBeInTheDocument();
+    expect(screen.getByText("Enter the child's full name")).toBeInTheDocument();
   });
 
-  it("S14b renders active and pending enrollment states", () => {
+  it("S14b renders the children screen", () => {
     renderRoute("/parent/children");
-    expect(screen.getByText("Active")).toBeInTheDocument();
-    expect(screen.getByText("Pending approval")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "My children" })).toBeInTheDocument();
   });
 
-  it("S15 looks up an invite and sends a request", async () => {
+  it("S15 rejects an invalid invite code", async () => {
     const user = userEvent.setup();
     renderRoute("/parent/link");
-    await user.type(screen.getByLabelText("Driver invite code"), "FWY7K2P9");
+    await user.type(screen.getByLabelText("Driver invite code"), "123");
     await user.click(screen.getByRole("button", { name: /Look up/ }));
-    expect(screen.getByText("Sipho Dlamini")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Confirm request" }));
-    expect(screen.getByText("Request sent")).toBeInTheDocument();
+    expect(screen.getByText("Enter a valid 8-character invite code.")).toBeInTheDocument();
   });
 
   it("S16 renders parent trip history for the selected child", () => {

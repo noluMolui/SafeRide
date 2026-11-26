@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public;
-select plan(8);
+select plan(12);
 
 insert into auth.users (id, aud, role, email, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 values
@@ -19,6 +19,8 @@ values ('00000000-0000-0000-0000-000000000421','00000000-0000-0000-0000-00000000
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000401', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000401","role":"authenticated"}', true);
+select is(public.lookup_invite('ABCDEFGH') ->> 'driver_name', 'Driver Test', 'parent can preview the invited driver');
+select ok(not (public.lookup_invite('ABCDEFGH') ? 'pdp_document_path'), 'invite preview does not expose private document paths');
 select is(public.redeem_invite('INVALID2','00000000-0000-0000-0000-000000000421') ->> 'error', 'invalid_code', 'invalid invite is rejected uniformly');
 select is(public.redeem_invite('ABCDEFGH','00000000-0000-0000-0000-000000000421') ->> 'status', 'pending', 'valid invite creates pending enrollment');
 select is((select count(*)::int from public.route_enrollments), 1, 'parent can read own enrollment');
@@ -27,6 +29,8 @@ select throws_ok($$update public.route_enrollments set status='active'$$, '42501
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000402', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000402","role":"authenticated"}', true);
 select is((select count(*)::int from public.learners), 0, 'driver cannot read pending learner details');
+select is((select first_name from public.get_pending_requests('00000000-0000-0000-0000-000000000411')), 'Child', 'route owner can review the pending learner first name');
+select ok(not (select to_jsonb(pending) ? 'home_address' from public.get_pending_requests('00000000-0000-0000-0000-000000000411') as pending), 'pending requests omit private addresses');
 select is(public.decide_enrollment((select id from public.route_enrollments limit 1), 'approve') ->> 'status', 'active', 'route owner may approve a pending learner');
 select is((select count(*)::int from public.learners), 1, 'driver can read an actively enrolled learner');
 
