@@ -58,6 +58,21 @@ describe("authentication", () => {
     await user.click(screen.getByRole("button", { name: "Log in" }));
     expect(authMocks.signInWithPassword).not.toHaveBeenCalled();
   });
+  it("keeps the selected appearance across navigation and reload", async () => {
+    localStorage.setItem("saferide-theme", "light");
+    const user = userEvent.setup();
+    const view = render(<MemoryRouter initialEntries={["/login"]}><App /></MemoryRouter>);
+    await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    await user.click(screen.getByRole("link", { name: "Create account" }));
+    expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
+    view.unmount();
+    render(<MemoryRouter initialEntries={["/login"]}><App /></MemoryRouter>);
+    expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
+    expect(localStorage.getItem("saferide-theme")).toBe("light");
+    localStorage.removeItem("saferide-theme");
+  });
   it("AC-1.10 shows validation instead of creating an account without consent", async () => {
     const user = userEvent.setup();
     render(<MemoryRouter initialEntries={["/signup"]}><App /></MemoryRouter>);
