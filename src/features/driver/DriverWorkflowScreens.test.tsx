@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { App } from "../../App";
@@ -9,39 +8,29 @@ function renderRoute(path: string) {
 }
 
 describe("third five frontend screens", () => {
-  it("S09b renders trip history", () => {
+  it("S09b does not show fabricated trip history when Supabase is unavailable", () => {
     renderRoute("/driver/trips");
     expect(screen.getByText("Trip history")).toBeInTheDocument();
-    expect(screen.getAllByText("Fourways to Crawford").length).toBeGreaterThan(0);
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 
-  it("S10 renders compliance and opens account deletion confirmation", async () => {
-    const user = userEvent.setup();
+  it("S10 does not show fabricated compliance details when Supabase is unavailable", () => {
     renderRoute("/driver/profile");
-    expect(screen.getByText("PrDP 123456789")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Delete account" }));
-    expect(screen.getByText("Delete SafeRide account?")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 
-  it("S11 filters the fee ledger", async () => {
-    const user = userEvent.setup();
+  it("S11 does not show fabricated fee records when Supabase is unavailable", () => {
     renderRoute("/driver/fees");
-    await user.click(screen.getByRole("button", { name: "Overdue" }));
-    expect(screen.getByText("Ruan van Wyk")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 
-  it("S12 saves a fee in the preview", async () => {
-    const user = userEvent.setup();
+  it("S12 does not claim to save a fee when Supabase is unavailable", () => {
     renderRoute("/driver/fees/new");
-    await user.click(screen.getByRole("button", { name: "Save fee" }));
-    expect(screen.getByText("Fee saved in this frontend preview.")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("service is not configured");
   });
 
-  it("S12b account delete confirmation can be cancelled", async () => {
-    const user = userEvent.setup();
+  it("S12b hides account actions until the profile loads", () => {
     renderRoute("/driver/profile");
-    await user.click(screen.getByRole("button", { name: "Delete account" }));
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
-    expect(screen.queryByText("Delete SafeRide account?")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Delete account" })).not.toBeInTheDocument();
   });
 });

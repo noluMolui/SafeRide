@@ -1,14 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
-import { getRequiredEnv } from "./env";
 
-export const supabase = createClient(
-  getRequiredEnv("VITE_SUPABASE_URL"),
-  getRequiredEnv("VITE_SUPABASE_ANON_KEY"),
-  {
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+
+export const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
     },
-  },
-);
+  })
+  : null;

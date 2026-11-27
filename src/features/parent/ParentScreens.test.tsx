@@ -11,36 +11,34 @@ function renderRoute(path: string) {
 describe("next five parent frontend screens", () => {
   it("S13 renders the parent live status feed", () => {
     renderRoute("/parent/home");
-    expect(screen.getByText("Good morning, Naledi")).toBeInTheDocument();
-    expect(screen.getByText("Lethabo Mokoena")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Today's trip status" })).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("Supabase is not configured");
   });
 
-  it("S14 saves a child profile in the preview", async () => {
+  it("S14 blocks an empty child profile", async () => {
     const user = userEvent.setup();
     renderRoute("/parent/children/new");
     await user.click(screen.getByRole("button", { name: "Save child" }));
-    expect(screen.getByText("Child profile saved in this frontend preview.")).toBeInTheDocument();
+    expect(screen.getByText("Enter the child's full name")).toBeInTheDocument();
   });
 
-  it("S14b renders active and pending enrollment states", () => {
+  it("S14b does not show fabricated enrollments when Supabase is unavailable", () => {
     renderRoute("/parent/children");
-    expect(screen.getByText("Active")).toBeInTheDocument();
-    expect(screen.getByText("Pending approval")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "My children" })).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 
-  it("S15 looks up an invite and sends a request", async () => {
+  it("S15 does not look up an invite without Supabase", async () => {
     const user = userEvent.setup();
     renderRoute("/parent/link");
     await user.type(screen.getByLabelText("Driver invite code"), "FWY7K2P9");
     await user.click(screen.getByRole("button", { name: /Look up/ }));
-    expect(screen.getByText("Sipho Dlamini")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Confirm request" }));
-    expect(screen.getByText("Request sent")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 
-  it("S16 renders parent trip history for the selected child", () => {
+  it("S16 does not show fabricated trip history when Supabase is unavailable", () => {
     renderRoute("/parent/children/child-1/history");
-    expect(screen.getByText("Trip history")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Lethabo Mokoena")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Trip history" })).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 });

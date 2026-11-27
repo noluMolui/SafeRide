@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "./features/auth/Login";
 import { Signup, type SignupValues, emptySignup } from "./features/auth/Signup";
 import { DriverCompliance } from "./features/auth/DriverCompliance";
-import { signupSchema } from "./features/auth/validation";
 import { ResetPassword } from "./features/auth/ResetPassword";
 import { JoinLink } from "./features/auth/JoinLink";
 import { DriverDashboard } from "./features/driver/DriverDashboard";
@@ -26,7 +26,38 @@ import { AdminVerification } from "./features/admin/AdminVerification";
 
 export function App() {
   const [signup, setSignup] = useState<SignupValues>(emptySignup);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    try {
+      const saved = localStorage.getItem("saferide-theme");
+      if (saved === "light" || saved === "dark") return saved;
+    } catch {
+      return "light";
+    }
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("saferide-theme", theme);
+    } catch {
+      return;
+    }
+  }, [theme]);
+
   return (
+    <>
+    <div className="theme-bar">
+      <button
+        className="theme-toggle"
+        type="button"
+        aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+        title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      >
+        {theme === "light" ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
+      </button>
+    </div>
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
@@ -54,17 +85,9 @@ export function App() {
       <Route path="/parent/fees" element={<ParentFees />} />
       <Route path="/parent/account" element={<ParentAccount />} />
       <Route path="/admin/verifications" element={<AdminVerification />} />
-      <Route
-        path="/signup/driver"
-        element={
-          signup.role === "driver" && signupSchema.safeParse(signup).success ? (
-            <DriverCompliance />
-          ) : (
-            <Navigate to="/signup" replace />
-          )
-        }
-      />
+      <Route path="/signup/driver" element={<DriverCompliance />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    </>
   );
 }

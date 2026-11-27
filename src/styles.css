@@ -11,6 +11,8 @@
 }
 
 @layer components {
+  .theme-bar { @apply flex justify-end border-b border-slate-200 bg-white px-5; }
+  .theme-toggle { @apply grid h-12 w-12 place-items-center rounded-lg text-muted hover:bg-soft; }
   .auth-page { @apply mx-auto w-full max-w-[560px] px-5 pb-12 pt-6 sm:px-8 sm:pt-10; }
   .login-page { @apply max-w-[530px] pt-12 sm:pt-20; }
   .login-heading { @apply mb-8 text-center; }
@@ -434,3 +436,24 @@
   .reject-dialog > span { @apply mt-1 block text-right text-xs text-muted; }
   .reject-dialog > div { @apply mt-4 grid grid-cols-2 gap-3; }
 }
+
+html[data-theme="dark"] { color-scheme: dark; }
+html[data-theme="dark"] body,
+html[data-theme="dark"] .driver-app,
+html[data-theme="dark"] .parent-app,
+html[data-theme="dark"] .admin-app { background-color: #111315; color: #f0f1f2; }
+html[data-theme="dark"] :is(.theme-bar, .card, .role-card, .driver-sidebar, .parent-sidebar, .admin-sidebar, .driver-mobile-header, .parent-mobile-header, .driver-bottom-nav, .parent-bottom-nav, .route-card, .route-list-card, .roster-summary, .roster-section, .trip-header, .checkin-row, .history-card, .trip-detail-card, .timeline-row, .profile-card, .settings-card, .month-picker, .fee-summary article, .fee-search, .fee-row, .child-status-card, .child-list-card, .driver-preview, .route-request-success, .parent-child-select, .parent-history-card, .parent-settings-card, .parent-fee-section, .admin-table-wrap, .confirm-panel, .reject-dialog, .compliance-strip > div, .compliance-strip > a) { background-color: #222629; color: #f0f1f2; border-color: #484e52; }
+html[data-theme="dark"] :is(.input, .back-button, .role-icon, .password-rules, .upload-box, .file-selected, .tag, .segmented, .count-chip, .stop-number, .driver-mobile-header button, .learner-row > a, .trip-header button, .month-picker button, .paid-fields, .parent-trip-grid article, .enrollment-list > div, .history-counts span) { background-color: #34393d; color: #f0f1f2; border-color: #555d62; }
+html[data-theme="dark"] :is(.secondary-button, .icon-text-button:not(.filled), .day-grid button, .segmented button.active, .pending-actions button, .enrollment-list button, .invite-actions button, .delete-button, .document-link, .admin-count) { background-color: #34393d; color: #f0f1f2; border-color: #697176; }
+html[data-theme="dark"] :is(.text-muted, .login-heading p, .intro, .bottom-link, .privacy-footer, .driver-sidebar nav a, .parent-sidebar nav a, .driver-bottom-nav a, .parent-bottom-nav a, .sidebar-logout, .driver-date, .driver-section-heading span, .route-card > p, .route-card-meta, .route-list-copy p, .driver-toolbar p, .parent-toolbar p, .parent-status-bar, .child-status-header p, .child-list-header p, .driver-preview-header p, .history-copy p, .timeline-row p, .fee-copy span, .profile-facts p span, .settings-grid p span, .admin-table th, .admin-table td:first-child span, .optional, .password-toggle, .theme-toggle) { color: #c1c8cc; }
+html[data-theme="dark"] :is(.text-ink, .role-card strong, .section-title h2, .join-code) { color: #f0f1f2; }
+html[data-theme="dark"] :is(.text-button, .back-link, .history-link, .bottom-link a, .parent-settings-card a) { color: #9ebcff; }
+html[data-theme="dark"] :is(.role-card.selected, .notice, .form-message, .trip-progress, .link-driver-banner, .privacy-helper, .payment-helper) { background-color: #293a4b; color: #e4ecf8; border-color: #607995; }
+html[data-theme="dark"] :is(.dashboard-requests, .delay-banner, .profile-banner, .parent-delay, .fee-summary .outstanding) { background-color: #463923; color: #ffe4a8; border-color: #947a4c; }
+html[data-theme="dark"] :is(.danger-zone, .input[aria-invalid="true"]) { background-color: #482c2e; color: #ffe4e4; border-color: #aa7474; }
+html[data-theme="dark"] :is(.field-error, .danger-zone p) { color: #ffc2c2; }
+html[data-theme="dark"] :is(.role-card.selected strong, .role-card.selected .role-icon, .section-title) { color: #b6ccff; }
+html[data-theme="dark"] :is(.driver-sidebar nav a.active, .parent-sidebar nav a.active) { background-color: #293a4b; color: #c5d5ff; }
+html[data-theme="dark"] :is(.driver-bottom-nav a.active, .parent-bottom-nav a.active) { color: #b6ccff; }
+html[data-theme="dark"] :is(.input::placeholder, textarea::placeholder) { color: #bcc3c8; }
+html[data-theme="dark"] .theme-toggle:hover { background-color: #34393d; }

@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { App } from "../../App";
@@ -11,33 +10,26 @@ function renderRoute(path: string) {
 describe("second five frontend screens", () => {
   it("S05 renders the driver dashboard", () => {
     renderRoute("/driver/dashboard");
-    expect(screen.getByText("Good morning, Sipho")).toBeInTheDocument();
-    expect(screen.getByText("Fourways to Crawford")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Hello, Driver" })).toBeInTheDocument();
   });
 
-  it("S06 renders route cards", () => {
+  it("S06 renders the routes screen", () => {
     renderRoute("/driver/routes");
-    expect(screen.getAllByText("Fourways to Crawford").length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: "Routes" })).toBeInTheDocument();
   });
 
-  it("S07 saves a route in the preview", async () => {
-    const user = userEvent.setup();
+  it("S07 renders the route form screen", () => {
     renderRoute("/driver/routes/new");
-    await user.click(screen.getByRole("button", { name: "Save route" }));
-    expect(screen.getByText("Route saved in this frontend preview.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "New route" })).toBeInTheDocument();
   });
 
-  it("S08 approves a pending request", async () => {
-    const user = userEvent.setup();
+  it("S08 renders the roster screen", () => {
     renderRoute("/driver/routes/route-1");
-    await user.click(screen.getByRole("button", { name: "Approve Thando Mthembu" }));
-    expect(screen.queryByText("Thando Mthembu")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Route roster" })).toBeInTheDocument();
   });
 
-  it("S09 updates a learner check-in status", async () => {
-    const user = userEvent.setup();
+  it("S09 reports when Supabase is not configured instead of showing sample check-ins", () => {
     renderRoute("/driver/trip/trip-1");
-    await user.click(screen.getAllByRole("button", { name: /Dropped Off/ })[1]!);
-    expect(screen.getAllByRole("button", { name: /Dropped Off/ })[1]!).toHaveClass("selected");
+    expect(screen.getByRole("alert")).toHaveTextContent("service is not configured");
   });
 });
