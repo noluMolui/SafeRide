@@ -1,10 +1,6 @@
 alter table public.fee_records add column if not exists ever_paid boolean not null default false;
 
 grant select on public.fee_records to authenticated;
-create policy fees_driver_select on public.fee_records for select to authenticated
-  using (driver_id = (select auth.uid()));
-create policy fees_parent_select on public.fee_records for select to authenticated
-  using (exists (select 1 from public.learners where id = learner_id and parent_id = (select auth.uid())));
 
 create or replace function public.get_parent_home()
 returns jsonb language plpgsql stable security definer
