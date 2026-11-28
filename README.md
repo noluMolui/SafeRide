@@ -242,6 +242,10 @@ SafeRide is an information and record-keeping tool. It is not a transport operat
 
 Live GPS tracking, in-app payments, school admin portals, native apps, and push/SMS/WhatsApp notifications. See PRD §6.6 for the full list.
 
-## License
+## License and Project Credit
 
-TBD. Add a `LICENSE` file before making the repository public.
+Copyright (c) 2026 Noluthando Molui. All rights reserved.
+
+SafeRide is a capstone project developed for Melsoft Academy. It is provided for
+academic evaluation and project demonstration. No commercial reuse or
+redistribution is permitted without the copyright holder's written permission.
