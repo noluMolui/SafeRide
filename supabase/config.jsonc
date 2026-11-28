@@ -33,7 +33,7 @@
       // Paths to self-signed certificate pair.
       // "cert_path": "../certs/my-cert.pem",
       // "key_path": "../certs/my-key.pem",
-    }
+    },
   },
 
   "db": {
@@ -59,7 +59,7 @@
       // How many server connections to allow per user/database pair.
       "default_pool_size": 20,
       // Maximum number of client connections allowed.
-      "max_client_conn": 100
+      "max_client_conn": 100,
     },
 
     // "vault": {
@@ -71,7 +71,7 @@
       "enabled": true,
       // Specifies an ordered list of schema files, directories, or glob patterns that describe your database.
       // Supports paths relative to supabase directory: "./schemas/*.sql", "./database".
-      "schema_paths": []
+      "schema_paths": [],
     },
 
     "seed": {
@@ -79,7 +79,7 @@
       "enabled": true,
       // Specifies an ordered list of seed files to load during db reset.
       // Supports glob patterns relative to supabase directory: "./seeds/*.sql"
-      "sql_paths": ["./seed.sql"]
+      "sql_paths": ["./seed.sql"],
     },
 
     "network_restrictions": {
@@ -90,7 +90,7 @@
       "allowed_cidrs": ["0.0.0.0/0"],
       // List of IPv6 CIDR blocks allowed to connect to the database.
       // Defaults to allow all IPv6 connections. Set empty array to block all IPs.
-      "allowed_cidrs_v6": ["::/0"]
+      "allowed_cidrs_v6": ["::/0"],
     },
 
     // Uncomment to reject non-secure connections to the database.
@@ -114,7 +114,7 @@
     // External URL of the API server that frontend connects to.
     "api_url": "http://127.0.0.1",
     // OpenAI API Key to use for Supabase AI in the Supabase Studio.
-    "openai_api_key": "env(OPENAI_API_KEY)"
+    "openai_api_key": "env(OPENAI_API_KEY)",
   },
 
   // Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
@@ -147,7 +147,7 @@
 
     // Allow connections via S3 compatible clients
     "s3_protocol": {
-      "enabled": true
+      "enabled": true,
     },
 
     // Image transformation API is available to Supabase Pro plan.
@@ -179,18 +179,21 @@
       // "buckets": {
       //   "documents-openai": {}
       // },
-    }
+    },
   },
 
   "auth": {
     "enabled": true,
     // The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
     // in emails.
-    "site_url": "http://127.0.0.1:3000",
+    "site_url": "http://127.0.0.1:5173",
     // The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
     // "external_url": "",
     // A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-    "additional_redirect_urls": ["https://127.0.0.1:3000"],
+    "additional_redirect_urls": [
+      "http://127.0.0.1:5173",
+      "http://localhost:5173",
+    ],
     // How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
     "jwt_expiry": 3600,
     // JWT issuer URL. If not set, defaults to auth.external_url.
@@ -240,7 +243,7 @@
       // Number of OTP / Magic link verifications that can be made in a 5 minute interval per IP address.
       "token_verifications": 30,
       // Number of Web3 logins that can be made in a 5 minute interval per IP address.
-      "web3": 30
+      "web3": 30,
     },
 
     // Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
@@ -323,8 +326,8 @@
         "account_sid": "",
         "message_service_sid": "",
         // DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
-        "auth_token": "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
-      }
+        "auth_token": "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)",
+      },
     },
 
     // Configure logged in session timeouts.
@@ -356,7 +359,7 @@
       // Control MFA via App Authenticator (TOTP)
       "totp": {
         "enroll_enabled": false,
-        "verify_enabled": false
+        "verify_enabled": false,
       },
 
       // Configure MFA via Phone Messaging
@@ -365,7 +368,7 @@
         "verify_enabled": false,
         "otp_length": 6,
         "template": "Your code is {{ .Code }}",
-        "max_frequency": "5s"
+        "max_frequency": "5s",
       },
 
       // Configure MFA via WebAuthn
@@ -392,15 +395,15 @@
         // If enabled, the nonce check will be skipped. Required for local sign in with Google auth.
         "skip_nonce_check": false,
         // If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.
-        "email_optional": false
-      }
+        "email_optional": false,
+      },
     },
 
     // Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS) standard.
     // You can configure "web3" rate limit in the [auth.rate_limit] section and set up [auth.captcha] if self-hosting.
     "web3": {
       "solana": {
-        "enabled": false
+        "enabled": false,
       },
 
       // Allow Ethereum wallet holders to sign in to your project via the Sign in with Ethereum (SIWE, EIP-4361) standard.
@@ -435,7 +438,7 @@
         "enabled": false,
         // Obtain from https://clerk.com/setup/supabase
         // "domain": "example.clerk.accounts.dev",
-      }
+      },
     },
 
     // OAuth server configuration
@@ -445,8 +448,8 @@
       // Path for OAuth consent flow UI
       "authorization_url_path": "/oauth/consent",
       // Allow dynamic client registration
-      "allow_dynamic_registration": false
-    }
+      "allow_dynamic_registration": false,
+    },
   },
 
   "edge_runtime": {
@@ -469,7 +472,7 @@
     "enabled": true,
     "port": 54327,
     // Configure one of the supported backends: `postgres`, `bigquery`.
-    "backend": "postgres"
+    "backend": "postgres",
   },
 
   // Experimental features may be deprecated any time
@@ -493,6 +496,6 @@
       // formatted with uppercase keywords, indent 2, max width 180, trailing commas,
       // and column/key alignment. Set to "null" to emit raw, unformatted SQL.
       // "format_options": "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}",
-    }
-  }
+    },
+  },
 }

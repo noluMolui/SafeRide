@@ -22,7 +22,10 @@ export function Login() {
     setIsSubmitting(true);
     setMessage("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     setIsSubmitting(false);
     if (error || !data.user) {
       setMessage("Incorrect email or password");
@@ -39,9 +42,13 @@ export function Login() {
       return;
     }
 
-    const role = profile?.role ?? (data.user.user_metadata.role === "driver" ? "driver" : null);
+    const role =
+      profile?.role ??
+      (data.user.user_metadata.role === "driver" ? "driver" : null);
     if (role === "driver") {
-      navigate(profile ? "/driver/dashboard" : "/signup/driver", { replace: true });
+      navigate(profile ? "/driver/dashboard" : "/signup/driver", {
+        replace: true,
+      });
       return;
     }
     if (role === "admin") {
@@ -62,15 +69,48 @@ export function Login() {
         <p>Know your child&apos;s trip status without sending a message.</p>
       </div>
       <form className="card form-stack" onSubmit={submit}>
-        <Field id="login-email" name="email" label="Email" type="email" autoComplete="email" required />
-        <Field id="login-password" name="password" label="Password" type="password" autoComplete="current-password" required />
-        <button className="primary-button" type="submit" disabled={isSubmitting}>{isSubmitting ? "Signing in…" : "Log in"}</button>
-        {message && <p className="form-message" role="status">{message}</p>}
-        <Link className="text-button" to="/reset-password">Forgot password?</Link>
+        <Field
+          id="login-email"
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+        <Field
+          id="login-password"
+          name="password"
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          required
+        />
+        <button
+          className="primary-button"
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Signing in…" : "Log in"}
+        </button>
+        {message && (
+          <p className="form-message" role="status">
+            {message}
+          </p>
+        )}
+        <Link className="text-button" to="/reset-password">
+          Forgot password?
+        </Link>
       </form>
-      <div className="divider"><span>New to SafeRide?</span></div>
-      <Link className="secondary-button" to="/signup">Create account</Link>
-      <p className="privacy-footer"><LockKeyhole size={18} aria-hidden="true" /> Privacy notice coming before launch</p>
+      <div className="divider">
+        <span>New to SafeRide?</span>
+      </div>
+      <Link className="secondary-button" to="/signup">
+        Create account
+      </Link>
+      <p className="privacy-footer">
+        <LockKeyhole size={18} aria-hidden="true" />{" "}
+        <Link to="/privacy">Privacy notice</Link>
+      </p>
     </main>
   );
 }

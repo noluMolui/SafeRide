@@ -17,4 +17,12 @@ export default tseslint.config(
     files: ["**/*.mjs"],
     languageOptions: { globals: { ...globals.node } },
   },
+  {
+    files: ["playwright.config.ts", "e2e/**/*.ts"],
+    languageOptions: { globals: { ...globals.node } },
+  },
+  {
+    files: ["supabase/functions/**/*.ts"],
+    languageOptions: { globals: { Deno: "readonly" } },
+  },
 );
