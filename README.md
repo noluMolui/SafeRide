@@ -7,9 +7,11 @@ and fee ledgers. The production web app is deployed at
 [saferide-rust.vercel.app](https://saferide-rust.vercel.app/).
 
 SafeRide handles sensitive information about children. The deployed app and
-backend are real, but the readiness gaps below mean this repository should not
-be treated as approval to onboard real families or enter children's personal
-information.
+backend are real, and the app now includes password recovery, account deletion,
+and an in-app privacy notice. However, the notice still lacks the responsible
+party's legal identity and contact details, and the hosting region and retention
+arrangements have not been confirmed. Do not onboard real families or enter
+children's personal information until those release requirements are resolved.
 
 ## Features
 
@@ -23,6 +25,12 @@ information.
   history, and fee management.
 - Parent child profiles, driver linking, trip status and history, fee history,
   and account profile management.
+- Password reset email requests and password updates from a recovery session.
+- Password-confirmed account deletion through a Supabase Edge Function,
+  including compliance-file cleanup and deletion of the Auth user and cascaded
+  application records.
+- An in-app privacy notice at `/privacy`; it is a transparent draft, not yet a
+  legally reviewed production notice.
 - Row-level security policies and database RPCs for protected workflows; the
   compliance-documents Storage bucket is private.
 - Responsive interface with light and dark themes.
@@ -97,6 +105,7 @@ version control and use separate local and production project credentials.
 | `npm run build`                        | Type-check and create the production bundle                           |
 | `npm run typecheck`                    | Run TypeScript checks                                                 |
 | `npm test`                             | Run the Vitest suite once                                             |
+| `npm run test:e2e`                     | Run Playwright browser tests in Chromium                              |
 | `npm run lint`                         | Run ESLint                                                            |
 | `npm run format:check`                 | Check formatting with Prettier                                        |
 | `npm run check:service-role`           | Check that a service-role key is not shipped in `src/`                |
@@ -106,10 +115,11 @@ version control and use separate local and production project credentials.
 | `npm run db:push`                      | Push local migrations to the linked Supabase project; use with care   |
 | `npm run types`                        | Generate TypeScript types from the local database                     |
 
-The GitHub Actions workflow currently runs install, lint, typecheck, unit tests,
-the service-role scan, and the production build. Database tests are available
-locally but are not part of that workflow. Browser end-to-end tests are not
-currently configured in CI.
+GitHub Actions runs lint, typecheck, unit tests, the service-role scan, and the
+production build. Separate jobs start a local Supabase stack and run database
+tests, and install Chromium and run Playwright browser smoke tests. The E2E
+tests use fake accounts and intercepted Auth responses; they do not create
+production users or test real email delivery.
 
 ## Database and authorization
 
@@ -142,28 +152,48 @@ The hosted Supabase project and production Vercel deployment are separate
 services. Applying a database migration does not deploy frontend code, and a
 frontend deployment does not apply database migrations.
 
-## Known gaps before onboarding real families
+Account deletion also requires deploying the `delete-account` Edge Function to
+the target Supabase project. The function validates the caller's access token,
+removes that user's private compliance files, then deletes the Auth user; the
+existing foreign-key cascades remove associated database records. It uses
+`SUPABASE_SERVICE_ROLE_KEY` only in the Edge Function runtime. Never expose this
+key to Vite or the browser. After deploying it, verify the function's logs and
+run a deletion test using a dedicated synthetic account.
 
-- The POPIA privacy notice is not yet published. The signup consent text
-  explicitly says it will be published before launch; the login footer also
-  identifies it as coming before launch.
-- Password reset currently validates the email and displays a success state,
-  but does not request a reset email from Supabase Auth or complete a password
-  reset.
-- In-app account deletion is not implemented. Users are directed to contact
-  support, but a support contact/process must be established and documented.
+```powershell
+npx supabase login
+npx supabase link --project-ref <project-ref>
+npx supabase functions deploy delete-account
+```
+
+Password recovery redirects to `/update-password`. Add that exact URL for each
+deployment domain to Supabase Auth's allowed redirect URLs, and configure a
+working email provider before relying on recovery emails.
+
+## Remaining release requirements
+
+- The privacy notice is available at `/privacy`, but is explicitly marked
+  incomplete. The responsible party's legal name and a working privacy contact
+  were not provided. The Supabase hosting region, international transfer
+  arrangements, and backup-retention period also need confirmation. Have the
+  responsible party provide those facts and obtain appropriate POPIA/legal
+  review before using the notice for production consent.
+- Confirm the deployed Edge Function is live and test deletion end to end using
+  a synthetic account, including removal of uploaded compliance documents.
+- Configure Supabase Auth's redirect allowlist and production email delivery;
+  the built-in email provider has strict project-level sending limits.
 - Auth email delivery is subject to Supabase project limits. With Supabase's
   built-in email provider, the documented default is 2 emails per hour per
   project; the same-user signup confirmation request also has a 60-second
   cooldown. Custom SMTP or an email hook can change the project email quota.
-- CI does not currently run database tests or browser end-to-end tests, and
-  local test data is not seeded automatically.
+- CI runs database and browser tests, but these tests do not replace a
+  production smoke test or validate provider email delivery.
 - This README and the product requirements are not legal advice or a substitute
   for a privacy/security review, an incident-response process, and operational
   support arrangements.
 
-Do not use production for test signups or enter real child data until these
-gaps have been addressed and the relevant privacy, security, and operational
+Do not use production for test signups or enter real child data until the
+remaining release requirements and relevant privacy, security, and operational
 checks have passed. Use synthetic data with the local Supabase stack in the
 meantime.
 

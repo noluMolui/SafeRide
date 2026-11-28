@@ -2,6 +2,8 @@ node_modules
 dist
 coverage
 package-lock.json
+test-results
+supabase/.temp
 docs/designs
 BUSINESS.md
 IMPLEMENTATION_PLAN.md
