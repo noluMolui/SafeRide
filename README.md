@@ -125,7 +125,7 @@ family, driver, and trip data. Admins are not self-registerable; an authorized
 operator must provision an admin account and role. Do not bypass RLS or use a
 service-role key from the browser.
 
-For schema work, start with the local stack, edit a migration, then run
+For schema work, start with the local stack, add a new migration, then run
 `npm run db:reset` and `npm run db:test`. Review migrations before using
 `npm run db:push` against any hosted project. Never reset or seed production as
 a development shortcut.
@@ -178,3 +178,40 @@ meantime.
   behavior.
 - [Implementation plan](IMPLEMENTATION_PLAN.md) — original phased plan; check
   the code and tests for the current implementation state.
+- [Online designs](https://stitch.google.com/projects/10900338452761913187).
+
+The PRD is the source of truth. If code and PRD disagree, update one of them in
+the same pull request.
+
+## Key Engineering Rules
+
+1. **Authorization lives in the database.** Every table has RLS enabled and forced. Client route guards are UX only. See PRD §2 and §4.5.
+2. **Identity comes from `auth.uid()`**, never from a client-supplied `driver_id` or `parent_id`.
+3. **Roles are immutable** after sign-up, and `admin` can never be chosen at sign-up.
+4. **Parents never see other families' data**, even on the same trip. Row filtering happens in RLS, not in the client.
+5. **Trip logs are append-only.** Corrections use `voided_at`; rows are never deleted (Realtime does not RLS-filter DELETE events).
+6. **Money is stored as integer cents (ZAR)** and formatted with `Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR' })`.
+7. **Times are stored as UTC** and displayed in `Africa/Johannesburg`.
+8. **Never log children's personal data** (names, addresses, phone numbers, medical or allergy notes) to the console, error trackers, or analytics.
+
+## Contributing
+
+1. Branch from `main`: `feat/<short-name>` or `fix/<short-name>`.
+2. Start from the relevant requirement or AC ID in `docs/PRD.md`.
+3. Write tests first, keep commits small, and use [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `test:`, `docs:`).
+4. Open a pull request. Ensure configured checks pass and list the AC IDs it covers.
+5. Schema changes go in a **new** migration file. Never edit an applied migration.
+
+## Privacy and Compliance
+
+SafeRide processes children's personal information, which is special personal information under South Africa's **POPIA (Act 4 of 2013)**. Treat all learner data as sensitive in code, logs, test fixtures, and screenshots. Never use real children's data in development. See PRD §6.3 for the full requirements.
+
+SafeRide is an information and record-keeping tool. It is not a transport operator and does not guarantee safety or compliance.
+
+## Out of Scope for V1
+
+Live GPS tracking, in-app payments, school admin portals, native apps, and push/SMS/WhatsApp notifications. See PRD §6.6 for the full list.
+
+## License
+
+TBD. Add a `LICENSE` file before making the repository public.
