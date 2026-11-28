@@ -1,104 +1,187 @@
 # SafeRide
 
-**Neighbourhood scholar transport & safety platform for South African parents and independent kombi/minibus operators.**
+SafeRide is a mobile-first scholar-transport coordination app for independent
+South African transport operators and parents. It provides driver compliance
+profiles, route and learner enrollment workflows, trip check-ins, trip history,
+and fee ledgers. The production web app is deployed at
+[saferide-rust.vercel.app](https://saferide-rust.vercel.app/).
 
-SafeRide aims to replace WhatsApp check-ins and paper payment notebooks with real-time trip check-ins, delay alerts, driver compliance profiles, and a monthly fee ledger.
+SafeRide handles sensitive information about children. The deployed app and
+backend are real, but the readiness gaps below mean this repository should not
+be treated as approval to onboard real families or enter children's personal
+information.
 
-| For parents                                                  | For drivers                                         |
-| ------------------------------------------------------------ | --------------------------------------------------- |
-| Live `Picked Up` / `Dropped Off` / `Absent` status per child | One-tap check-ins, even offline                     |
-| Delay alerts and trip history                                | Roster with emergency contacts and allergy notes    |
-| Driver PDP and roadworthy status at a glance                 | Compliance profile that builds trust                |
-| Fee balance and payment history                              | Monthly fee ledger (`Pending` / `Paid` / `Overdue`) |
+## Features
 
-> **Status:** MVP (V1) in development. Scope is defined in [`docs/PRD.md`](docs/PRD.md); the business case is in [`BUSINESS.md`](BUSINESS.md).
+- Parent and driver account registration and email/password login through
+  Supabase Auth; administrator accounts are provisioned manually.
+- Driver compliance onboarding, private PDP and roadworthy document uploads,
+  and an administrator verification queue.
+- Driver vehicles, routes, invite codes, enrollment approvals, and learner
+  rosters.
+- Driver trip start, pickup/drop-off/absence check-ins, delay notices, trip
+  history, and fee management.
+- Parent child profiles, driver linking, trip status and history, fee history,
+  and account profile management.
+- Row-level security policies and database RPCs for protected workflows; the
+  compliance-documents Storage bucket is private.
+- Responsive interface with light and dark themes.
 
-The current mobile-first frontend preview covers the first three PRD screens:
-login, sign-up and driver compliance. This is **not an operational
-authentication system**. No accounts are created, credentials sent, consent
-recorded, or documents uploaded. Form details stay in browser memory and
-disappear when the page is refreshed or closed. Privacy notice text and
-password reset are pending. Do not enter real personal information or
-documents. Server-side validation, authorisation, private storage and the rest
-of the PRD remain to be implemented before launch.
+The app is built with React 18, TypeScript, Vite, React Router, Supabase
+(`@supabase/supabase-js`), and Tailwind CSS.
 
-Design references in `docs/designs` are named `Sxx-screen-name.png`, using the
-uppercase screen ID and full screen name from the PRD for easy sorting and
-searching. They are visual references, not feature specifications: the PRD
-takes precedence where a design includes out-of-scope features.
+## Requirements
 
-Designs: https://stitch.google.com/projects/10900338452761913187
----
+- Node.js 20.19+ or 22.12+ and npm.
+- Docker Desktop for running the local Supabase stack.
 
-## Documentation
+## Local development
 
-| Doc                          | Purpose                                                                                                                                           |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`docs/PRD.md`](docs/PRD.md) | Product requirements: RBAC matrix, features F1–F4 with Given/When/Then acceptance criteria, database schema, screen inventory, NFRs and non-goals |
-| [`BUSINESS.md`](BUSINESS.md) | Business model, pricing, unit economics, go-to-market, risks                                                                                      |
+Use a local Supabase stack for development and testing. This prevents test
+accounts and records from being created in the hosted production project.
 
-The PRD is the source of truth. If code and PRD disagree, update one of them in the same pull request.
+1. Install dependencies and create a local environment file:
 
----
+   ```powershell
+   npm install
+   Copy-Item .env.example .env.local
+   ```
 
-## Tech Stack
+2. Start the local Supabase services and apply the migrations:
 
-- **Current frontend:** React 18, TypeScript, Vite, Tailwind CSS, React Router and Zod
-- **Planned backend:** Supabase (PostgreSQL, Auth, Row-Level Security, Realtime, Storage and pg_cron), as described in the PRD
-- **Current tests:** Vitest and Testing Library
+   ```powershell
+   npm run db:start
+   npm run db:reset
+   ```
 
----
+   The seed file currently contains no sample accounts or records. To connect
+   the frontend to the local stack, set `VITE_SUPABASE_URL` and
+   `VITE_SUPABASE_ANON_KEY` in `.env.local` to the local API URL and public
+   anon/publishable key shown by `npx supabase status`.
 
-## Run locally
+3. Start Vite:
 
-Requires Node.js 20.19+ or 22.12+.
+   ```powershell
+   npm run dev
+   ```
 
-```sh
-npm install
-npm run dev
+   Open the local URL printed by Vite. The frontend can also run without these
+   environment variables, but backend-dependent actions will report that the
+   service is not configured.
+
+Stop the local Supabase services when finished:
+
+```powershell
+npm run db:stop
 ```
 
-Open the address printed by Vite.
+## Environment and credentials
 
----
+The frontend reads these Vite environment variables:
 
-## Validation
+| Variable                 | Purpose                                                    |
+| ------------------------ | ---------------------------------------------------------- |
+| `VITE_SUPABASE_URL`      | Supabase project API URL                                   |
+| `VITE_SUPABASE_ANON_KEY` | Public anon/publishable API key used by the browser client |
 
-Run `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build` to
-validate changes.
+Vite embeds `VITE_*` values in browser assets. Only a public anon/publishable
+key belongs here. Never put a Supabase `service_role` or `sb_secret` key in a
+`VITE_*` variable, source file, or client bundle. Keep `.env.local` out of
+version control and use separate local and production project credentials.
 
----
+## Useful commands
 
-## Project Structure
+| Command                                | Purpose                                                               |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| `npm run dev`                          | Start the Vite development server                                     |
+| `npm run build`                        | Type-check and create the production bundle                           |
+| `npm run typecheck`                    | Run TypeScript checks                                                 |
+| `npm test`                             | Run the Vitest suite once                                             |
+| `npm run lint`                         | Run ESLint                                                            |
+| `npm run format:check`                 | Check formatting with Prettier                                        |
+| `npm run check:service-role`           | Check that a service-role key is not shipped in `src/`                |
+| `npm run db:start` / `npm run db:stop` | Start / stop local Supabase                                           |
+| `npm run db:reset`                     | Recreate the local database, apply migrations, then run the seed file |
+| `npm run db:test`                      | Run Supabase database tests                                           |
+| `npm run db:push`                      | Push local migrations to the linked Supabase project; use with care   |
+| `npm run types`                        | Generate TypeScript types from the local database                     |
 
-> Target layout from the PRD; some components are not implemented in the current frontend preview.
+The GitHub Actions workflow currently runs install, lint, typecheck, unit tests,
+the service-role scan, and the production build. Database tests are available
+locally but are not part of that workflow. Browser end-to-end tests are not
+currently configured in CI.
 
-```
-.
-├── docs/
-│   └── PRD.md
-├── BUSINESS.md
-├── supabase/
-│   ├── migrations/          # SQL migrations (0001_init.sql from PRD §4.2 onward)
-│   ├── tests/               # pgTAP / RLS tests (PRD §2.4, matrix N1–N17)
-│   ├── seed.sql             # test users, routes, learners, fees
-│   └── config.toml
-├── src/
-│   ├── app/                 # routing, providers, route guards
-│   ├── features/
-│   │   ├── auth/            # F1: sign-up, login, driver compliance
-│   │   ├── routes/          # F2: routes, roster, invites, child profiles
-│   │   ├── trips/           # F3: check-in, delay notices, parent feed, history
-│   │   └── fees/            # F4: driver ledger, parent fee history
-│   ├── lib/                 # validators, formatters, offline queue, supabase client
-│   ├── components/          # shared UI components
-│   └── test/                # test utilities and fixtures
-├── e2e/                     # Playwright specs (one per feature F1–F4)
-├── .github/workflows/ci.yml
-└── README.md
-```
+## Database and authorization
 
----
+Database changes are maintained in `supabase/migrations/` and are applied in
+order. The current chain is `0001` through `0016`. It defines profiles,
+vehicles, learners, routes, enrollments, trips, trip logs, fee records, RPCs,
+permissions, and the private compliance document bucket. `supabase/seed.sql`
+is currently a placeholder, so a reset does not create test users or sample
+transport records.
+
+The database uses row-level security and role/relationship checks for access to
+family, driver, and trip data. Admins are not self-registerable; an authorized
+operator must provision an admin account and role. Do not bypass RLS or use a
+service-role key from the browser.
+
+For schema work, start with the local stack, add a new migration, then run
+`npm run db:reset` and `npm run db:test`. Review migrations before using
+`npm run db:push` against any hosted project. Never reset or seed production as
+a development shortcut.
+
+## Deployment
+
+The frontend is a Vite single-page application. `vercel.json` rewrites app
+routes to `index.html`, so direct navigation to routes such as `/signup` works.
+Configure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Vercel environment
+variables for the appropriate deployment environment. Supabase Auth's allowed
+redirect URLs and email settings must also match the deployed domain.
+
+The hosted Supabase project and production Vercel deployment are separate
+services. Applying a database migration does not deploy frontend code, and a
+frontend deployment does not apply database migrations.
+
+## Known gaps before onboarding real families
+
+- The POPIA privacy notice is not yet published. The signup consent text
+  explicitly says it will be published before launch; the login footer also
+  identifies it as coming before launch.
+- Password reset currently validates the email and displays a success state,
+  but does not request a reset email from Supabase Auth or complete a password
+  reset.
+- In-app account deletion is not implemented. Users are directed to contact
+  support, but a support contact/process must be established and documented.
+- Auth email delivery is subject to Supabase project limits. With Supabase's
+  built-in email provider, the documented default is 2 emails per hour per
+  project; the same-user signup confirmation request also has a 60-second
+  cooldown. Custom SMTP or an email hook can change the project email quota.
+- CI does not currently run database tests or browser end-to-end tests, and
+  local test data is not seeded automatically.
+- This README and the product requirements are not legal advice or a substitute
+  for a privacy/security review, an incident-response process, and operational
+  support arrangements.
+
+Do not use production for test signups or enter real child data until these
+gaps have been addressed and the relevant privacy, security, and operational
+checks have passed. Use synthetic data with the local Supabase stack in the
+meantime.
+
+## Project documentation
+
+- [Product requirements](docs/PRD.md) — product scope, roles, authorization
+  rules, and acceptance criteria.
+- [Business document](BUSINESS.md) — business model, assumptions, and pilot
+  plans.
+- [Design references](docs/designs/) — screen mockups. They are visual
+  references; the PRD takes precedence when a mockup includes out-of-scope
+  behavior.
+- [Implementation plan](IMPLEMENTATION_PLAN.md) — original phased plan; check
+  the code and tests for the current implementation state.
+- [Online designs](https://stitch.google.com/projects/10900338452761913187).
+
+The PRD is the source of truth. If code and PRD disagree, update one of them in
+the same pull request.
 
 ## Key Engineering Rules
 
@@ -111,8 +194,6 @@ validate changes.
 7. **Times are stored as UTC** and displayed in `Africa/Johannesburg`.
 8. **Never log children's personal data** (names, addresses, phone numbers, medical or allergy notes) to the console, error trackers, or analytics.
 
----
-
 ## Contributing
 
 1. Branch from `main`: `feat/<short-name>` or `fix/<short-name>`.
@@ -121,21 +202,15 @@ validate changes.
 4. Open a pull request. Ensure configured checks pass and list the AC IDs it covers.
 5. Schema changes go in a **new** migration file. Never edit an applied migration.
 
----
-
 ## Privacy and Compliance
 
 SafeRide processes children's personal information, which is special personal information under South Africa's **POPIA (Act 4 of 2013)**. Treat all learner data as sensitive in code, logs, test fixtures, and screenshots. Never use real children's data in development. See PRD §6.3 for the full requirements.
 
 SafeRide is an information and record-keeping tool. It is not a transport operator and does not guarantee safety or compliance.
 
----
-
 ## Out of Scope for V1
 
 Live GPS tracking, in-app payments, school admin portals, native apps, and push/SMS/WhatsApp notifications. See PRD §6.6 for the full list.
-
----
 
 ## License
 
